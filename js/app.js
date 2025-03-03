@@ -20,16 +20,21 @@ document.addEventListener('DOMContentLoaded', () => {
             App.updateLastUpdateDate();
         },
         
-        // Set up global event listeners
+                    // Set up global event listeners
         setupEventListeners: () => {
             // Toggle sidebar
-            document.getElementById('sidebar-toggle').addEventListener('click', () => {
+            document.getElementById('sidebar-toggle').addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent the click from bubbling to main-content
                 const sidebar = document.querySelector('.sidebar');
-                sidebar.classList.toggle('collapsed');
                 
                 // For mobile devices
                 if (window.innerWidth <= 992) {
                     sidebar.classList.toggle('show');
+                    // Toggle body class to prevent background scrolling
+                    document.body.classList.toggle('sidebar-open');
+                } else {
+                    // Only toggle collapsed class on desktop
+                    sidebar.classList.toggle('collapsed');
                 }
                 
                 document.querySelector('.main-content').classList.toggle('expanded');
@@ -71,14 +76,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 App.closeModal();
             });
             
-            // Close sidebar when clicking outside on mobile
+            // Close sidebar when clicking main content on mobile
             document.querySelector('.main-content').addEventListener('click', (e) => {
                 if (window.innerWidth <= 992) {
+                    // Don't close if the sidebar toggle button was clicked
+                    if (e.target.closest('#sidebar-toggle')) {
+                        return;
+                    }
+                    
                     const sidebar = document.querySelector('.sidebar');
                     if (sidebar.classList.contains('show')) {
                         sidebar.classList.remove('show');
+                        // Remove body class when sidebar is closed
+                        document.body.classList.remove('sidebar-open');
                     }
                 }
+            });
+            
+            // Close sidebar when clicking a navigation item on mobile
+            document.querySelectorAll('.nav-item a').forEach(item => {
+                item.addEventListener('click', () => {
+                    if (window.innerWidth <= 992) {
+                        const sidebar = document.querySelector('.sidebar');
+                        if (sidebar.classList.contains('show')) {
+                            sidebar.classList.remove('show');
+                            // Remove body class when sidebar is closed
+                            document.body.classList.remove('sidebar-open');
+                        }
+                    }
+                });
             });
         },
         
