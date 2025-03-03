@@ -1,0 +1,405 @@
+/* 
+ * charts.css - Styles for charts and data visualizations in the Merger Tracker application 
+ */
+
+/* ---------- Chart Containers ---------- */
+.chart {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+.chart-container {
+    position: relative;
+    margin: 0 auto;
+}
+
+.small-chart {
+    height: 200px;
+}
+
+.large-chart {
+    height: 400px;
+}
+
+/* ---------- Chart Legend ---------- */
+.chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+    justify-content: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: var(--space-xs);
+}
+
+/* ---------- Chart Tooltip ---------- */
+.chart-tooltip {
+    background: rgba(0, 0, 0, 0.8);
+    color: var(--white);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--border-radius);
+    font-size: 0.85rem;
+    position: absolute;
+    pointer-events: none;
+    z-index: 100;
+    white-space: nowrap;
+}
+
+.chart-tooltip-label {
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.chart-tooltip-value {
+    display: flex;
+    align-items: center;
+}
+
+.chart-tooltip-color {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: var(--space-xs);
+}
+
+/* ---------- Chart.js Customizations ---------- */
+
+/* Status Chart (Pie/Doughnut) */
+.chart-status-legend {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-top: var(--space-md);
+}
+
+.status-legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.status-pending-color {
+    background-color: var(--status-pending);
+}
+
+.status-phase1-color {
+    background-color: var(--phase1-color);
+}
+
+.status-phase2-color {
+    background-color: var(--phase2-color);
+}
+
+.status-public-benefit-color {
+    background-color: var(--public-benefit-color);
+}
+
+.status-completed-color {
+    background-color: var(--status-active);
+}
+
+.status-rejected-color {
+    background-color: var(--status-rejected);
+}
+
+.status-withdrawn-color {
+    background-color: var(--status-withdrawn);
+}
+
+/* Timeline Chart (Horizontal Bar) */
+.timeline-chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+.statutory-line {
+    border-left: 2px dashed var(--secondary-color);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+.statutory-label {
+    position: absolute;
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+    white-space: nowrap;
+}
+
+/* Duration Chart (Bar) */
+.chart-duration .chart-bar {
+    border-radius: var(--border-radius);
+    height: 25px;
+    margin-bottom: var(--space-md);
+    position: relative;
+    background-color: var(--primary-light);
+}
+
+.chart-duration .chart-bar-fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+    position: relative;
+}
+
+.chart-duration .chart-bar-label {
+    position: absolute;
+    left: var(--space-sm);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--dark-gray);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.chart-duration .chart-bar-value {
+    position: absolute;
+    right: var(--space-sm);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--dark-gray);
+    font-size: 0.85rem);
+}
+
+.chart-duration .phase1-bar .chart-bar-fill {
+    background-color: var(--phase1-color);
+}
+
+.chart-duration .phase2-bar .chart-bar-fill {
+    background-color: var(--phase2-color);
+}
+
+.chart-duration .public-benefit-bar .chart-bar-fill {
+    background-color: var(--public-benefit-color);
+}
+
+/* Time Series Chart (Line) */
+.time-series-chart {
+    position: relative;
+    height: 320px;
+}
+
+.chart-grid-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1px dashed var(--border-color);
+    z-index: 1;
+}
+
+.chart-axis-label {
+    position: absolute;
+    font-size: 0.8rem;
+    color: var(--muted-text);
+}
+
+.chart-x-label {
+    bottom: 5px;
+    text-align: center;
+}
+
+.chart-y-label {
+    left: 5px;
+    transform: rotate(-90deg);
+    transform-origin: left center;
+    white-space: nowrap;
+}
+
+/* Outcomes Chart (Pie/Doughnut) */
+.outcome-cleared-color {
+    background-color: var(--accent-color);
+}
+
+.outcome-conditions-color {
+    background-color: var(--warning-color);
+}
+
+.outcome-rejected-color {
+    background-color: var(--danger-color);
+}
+
+.outcome-withdrawn-color {
+    background-color: var(--secondary-color);
+}
+
+/* Industry Chart (Horizontal Bar) */
+.industry-chart .chart-bar {
+    height: 25px;
+    margin-bottom: var(--space-sm);
+    background-color: var(--primary-light);
+    border-radius: var(--border-radius);
+    position: relative;
+}
+
+.industry-chart .chart-bar-fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.industry-chart .chart-bar-label {
+    position: absolute;
+    left: var(--space-sm);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--dark-gray);
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60%;
+}
+
+.industry-chart .chart-bar-value {
+    position: absolute;
+    right: var(--space-sm);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--dark-gray);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Phase Progression Chart (Sankey) */
+.sankey-node {
+    fill-opacity: 0.8;
+    stroke: var(--white);
+    stroke-width: 1px;
+}
+
+.sankey-link {
+    fill: none;
+    stroke-opacity: 0.2;
+}
+
+.sankey-link:hover {
+    stroke-opacity: 0.4;
+}
+
+.sankey-node-label {
+    font-size: 0.8rem;
+    fill: var(--dark-gray);
+    pointer-events: none;
+}
+
+/* Extensions Analysis Chart (Grouped Bar) */
+.extensions-chart .chart-group {
+    display: flex;
+    margin-bottom: var(--space-md);
+}
+
+.extensions-chart .chart-bar {
+    height: 20px;
+    margin-right: var(--space-md);
+    background-color: var(--primary-light);
+    border-radius: var(--border-radius);
+    position: relative;
+    flex: 1;
+}
+
+.extensions-chart .chart-bar-fill {
+    height: 100%;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.extensions-chart .chart-bar-phase1 .chart-bar-fill {
+    background-color: var(--phase1-color);
+}
+
+.extensions-chart .chart-bar-phase2 .chart-bar-fill {
+    background-color: var(--phase2-color);
+}
+
+.extensions-chart .chart-bar-public-benefit .chart-bar-fill {
+    background-color: var(--public-benefit-color);
+}
+
+.extensions-chart .chart-group-label {
+    font-size: 0.85rem;
+    margin-bottom: var(--space-xs);
+}
+
+/* Chart.js Tooltip Customization */
+.chartjs-tooltip {
+    background: rgba(0, 0, 0, 0.8);
+    color: var(--white);
+    border-radius: var(--border-radius);
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.85rem;
+    box-shadow: var(--shadow-md);
+    pointer-events: none;
+}
+
+.chartjs-tooltip-key {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: var(--space-xs);
+}
+
+/* Custom Color Schemes for Charts */
+.chart-colors-phase {
+    --color-1: var(--phase1-color);
+    --color-2: var(--phase2-color);
+    --color-3: var(--public-benefit-color);
+    --color-4: var(--primary-dark);
+    --color-5: var(--secondary-color);
+}
+
+.chart-colors-status {
+    --color-1: var(--status-pending);
+    --color-2: var(--phase1-color);
+    --color-3: var(--phase2-color);
+    --color-4: var(--public-benefit-color);
+    --color-5: var(--status-active);
+    --color-6: var(--status-rejected);
+    --color-7: var(--status-withdrawn);
+}
+
+.chart-colors-outcome {
+    --color-1: var(--accent-color);
+    --color-2: var(--warning-color);
+    --color-3: var(--danger-color);
+    --color-4: var(--secondary-color);
+}
+
+/* Chart.js Responsive Behavior */
+@media (max-width: 768px) {
+    .chart {
+        height: 250px;
+    }
+    
+    .large-chart {
+        height: 300px;
+    }
+    
+    .chart-legend {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 576px) {
+    .chart {
+        height: 200px;
+    }
+    
+    .time-series-chart {
+        height: 250px;
+    }
+}

@@ -1,0 +1,789 @@
+/* 
+ * components.css - Styles for reusable components in the Merger Tracker application 
+ */
+
+/* ---------- Status Badge ---------- */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.status-badge i {
+    margin-right: var(--space-xs);
+    font-size: 0.7rem;
+}
+
+.status-badge-pending {
+    background-color: var(--secondary-light);
+    color: var(--status-pending);
+}
+
+.status-badge-phase1 {
+    background-color: rgba(0, 123, 255, 0.15);
+    color: var(--phase1-color);
+}
+
+.status-badge-phase2 {
+    background-color: rgba(253, 126, 20, 0.15);
+    color: var(--phase2-color);
+}
+
+.status-badge-public-benefit {
+    background-color: rgba(111, 66, 193, 0.15);
+    color: var(--public-benefit-color);
+}
+
+.status-badge-completed {
+    background-color: rgba(40, 167, 69, 0.15);
+    color: var(--status-active);
+}
+
+.status-badge-cleared {
+    background-color: rgba(40, 167, 69, 0.15);
+    color: var(--status-active);
+}
+
+.status-badge-conditions {
+    background-color: rgba(255, 193, 7, 0.15);
+    color: #d39e00;
+}
+
+.status-badge-rejected {
+    background-color: rgba(220, 53, 69, 0.15);
+    color: var(--status-rejected);
+}
+
+.status-badge-withdrawn {
+    background-color: var(--secondary-light);
+    color: var(--status-withdrawn);
+}
+
+/* ---------- Timeline Component ---------- */
+.timeline {
+    position: relative;
+    margin: var(--space-xl) 0;
+    padding-bottom: var(--space-lg);
+}
+
+.timeline-track {
+    position: absolute;
+    top: 35px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: var(--border-color);
+    z-index: 1;
+}
+
+.timeline-progress {
+    position: absolute;
+    top: 35px;
+    left: 0;
+    height: 4px;
+    background-color: var(--primary-color);
+    z-index: 2;
+}
+
+.timeline-nodes {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    z-index: 3;
+}
+
+.timeline-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 70px;
+}
+
+.timeline-node-icon {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: var(--white);
+    border: 3px solid var(--border-color);
+    margin-bottom: var(--space-sm);
+    z-index: 4;
+}
+
+.timeline-node.active .timeline-node-icon {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+}
+
+.timeline-node.completed .timeline-node-icon {
+    border-color: var(--accent-color);
+    background-color: var(--accent-color);
+}
+
+.timeline-node.current .timeline-node-icon {
+    border-color: var(--primary-color);
+    background-color: var(--white);
+}
+
+.timeline-node-icon i {
+    color: var(--white);
+    font-size: 0.7rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.timeline-node.current .timeline-node-icon i {
+    color: var(--primary-color);
+}
+
+.timeline-node-date {
+    font-size: 0.7rem;
+    color: var(--muted-text);
+    text-align: center;
+    margin-bottom: var(--space-xs);
+}
+
+.timeline-node-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    color: var(--dark-gray);
+}
+
+.timeline-node.active .timeline-node-label,
+.timeline-node.completed .timeline-node-label,
+.timeline-node.current .timeline-node-label {
+    color: var(--primary-dark);
+}
+
+.timeline-events {
+    margin-top: var(--space-xl);
+}
+
+.timeline-event {
+    display: flex;
+    margin-bottom: var(--space-lg);
+    position: relative;
+}
+
+.timeline-event:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-event-dot {
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--primary-light);
+    border: 2px solid var(--primary-color);
+    margin-top: 5px;
+    margin-right: var(--space-md);
+}
+
+.timeline-event-date {
+    flex-shrink: 0;
+    width: 100px;
+    font-size: 0.8rem;
+    color: var(--muted-text);
+    margin-right: var(--space-md);
+}
+
+.timeline-event-content {
+    flex: 1;
+}
+
+.timeline-event-title {
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.timeline-event-description {
+    font-size: 0.9rem;
+    color: var(--body-text);
+}
+
+/* Phase-specific timeline events */
+.timeline-event.phase1 .timeline-event-dot {
+    background-color: rgba(0, 123, 255, 0.2);
+    border-color: var(--phase1-color);
+}
+
+.timeline-event.phase2 .timeline-event-dot {
+    background-color: rgba(253, 126, 20, 0.2);
+    border-color: var(--phase2-color);
+}
+
+.timeline-event.public-benefit .timeline-event-dot {
+    background-color: rgba(111, 66, 193, 0.2);
+    border-color: var(--public-benefit-color);
+}
+
+.timeline-event.decision .timeline-event-dot {
+    background-color: rgba(40, 167, 69, 0.2);
+    border-color: var(--status-active);
+}
+
+/* Detailed Timeline (for merger detail view) */
+.detailed-timeline {
+    padding: var(--space-lg) 0;
+}
+
+.detailed-timeline .timeline-track {
+    left: 45px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    height: auto;
+}
+
+.detailed-timeline .timeline-progress {
+    left: 45px;
+    top: 0;
+    width: 4px;
+}
+
+.detailed-timeline .timeline-event {
+    padding-left: 45px;
+}
+
+.detailed-timeline .timeline-event-dot {
+    position: absolute;
+    left: 41px;
+    transform: translateX(-50%);
+}
+
+.detailed-timeline .timeline-event-content {
+    background-color: var(--light-gray);
+    padding: var(--space-md);
+    border-radius: var(--border-radius);
+}
+
+/* Upcoming events */
+.timeline-event.upcoming .timeline-event-dot {
+    background-color: var(--white);
+    border-color: var(--border-color);
+}
+
+.timeline-event.upcoming .timeline-event-title,
+.timeline-event.upcoming .timeline-event-description {
+    color: var(--muted-text);
+}
+
+/* ---------- Progress Bar ---------- */
+.progress-container {
+    width: 100%;
+    height: 8px;
+    background-color: var(--light-gray);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-bar-phase1 {
+    background-color: var(--phase1-color);
+}
+
+.progress-bar-phase2 {
+    background-color: var(--phase2-color);
+}
+
+.progress-bar-public-benefit {
+    background-color: var(--public-benefit-color);
+}
+
+.progress-bar-completed {
+    background-color: var(--accent-color);
+}
+
+.progress-label {
+    font-size: 0.8rem;
+    margin-top: var(--space-xs);
+    display: flex;
+    justify-content: space-between;
+}
+
+/* ---------- Data Table ---------- */
+.sortable-header {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+
+.sortable-header:hover {
+    background-color: var(--mid-gray);
+}
+
+.sort-icon {
+    margin-left: var(--space-xs);
+    font-size: 0.8rem;
+}
+
+.cell-with-icon {
+    display: flex;
+    align-items: center;
+}
+
+.cell-with-icon i {
+    margin-right: var(--space-sm);
+}
+
+.cell-status {
+    white-space: nowrap;
+}
+
+.table-actions {
+    white-space: nowrap;
+}
+
+.row-expanded {
+    background-color: var(--light-gray) !important;
+}
+
+.row-details {
+    background-color: var(--light-gray);
+    padding: 0;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    max-height: 0;
+}
+
+.row-details.show {
+    padding: var(--space-md) var(--space-lg);
+    max-height: 500px;
+}
+
+.row-details-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-md);
+}
+
+.row-details-item h4 {
+    font-size: 0.8rem;
+    color: var(--muted-text);
+    margin-bottom: var(--space-xs);
+}
+
+.row-details-item p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.days-countdown {
+    display: flex;
+    align-items: center;
+}
+
+.days-countdown-badge {
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--border-radius);
+    font-size: 0.8rem;
+    font-weight: 600;
+    min-width: 45px;
+    text-align: center;
+}
+
+.days-urgent {
+    background-color: rgba(220, 53, 69, 0.15);
+    color: var(--danger-color);
+}
+
+.days-warning {
+    background-color: rgba(255, 193, 7, 0.15);
+    color: #d39e00;
+}
+
+.days-normal {
+    background-color: rgba(40, 167, 69, 0.15);
+    color: var(--status-active);
+}
+
+/* ---------- Search Results ---------- */
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    box-shadow: var(--shadow-md);
+    z-index: 1000;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+}
+
+.search-results.show {
+    display: block;
+}
+
+.search-result-item {
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background-color: var(--light-gray);
+}
+
+.search-result-title {
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.search-result-meta {
+    font-size: 0.8rem;
+    color: var(--muted-text);
+    display: flex;
+    gap: var(--space-md);
+}
+
+.search-no-results {
+    padding: var(--space-lg);
+    text-align: center;
+    color: var(--muted-text);
+}
+
+/* ---------- Tooltips ---------- */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: var(--dark-gray);
+    color: var(--white);
+    text-align: center;
+    border-radius: var(--border-radius);
+    padding: var(--space-sm) var(--space-md);
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.8rem;
+    font-weight: normal;
+    box-shadow: var(--shadow-md);
+}
+
+.tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--dark-gray) transparent transparent transparent;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* ---------- Notifications ---------- */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: var(--space-md) var(--space-lg);
+    border-radius: var(--border-radius);
+    background-color: var(--white);
+    box-shadow: var(--shadow-lg);
+    z-index: 2000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    max-width: 400px;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notification-icon {
+    margin-right: var(--space-md);
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.notification-message {
+    color: var(--muted-text);
+    font-size: 0.9rem;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: var(--muted-text);
+    margin-left: var(--space-md);
+    cursor: pointer;
+}
+
+.notification-success {
+    border-left: 4px solid var(--accent-color);
+}
+
+.notification-success .notification-icon {
+    color: var(--accent-color);
+}
+
+.notification-error {
+    border-left: 4px solid var(--danger-color);
+}
+
+.notification-error .notification-icon {
+    color: var(--danger-color);
+}
+
+.notification-info {
+    border-left: 4px solid var(--info-color);
+}
+
+.notification-info .notification-icon {
+    color: var(--info-color);
+}
+
+.notification-warning {
+    border-left: 4px solid var(--warning-color);
+}
+
+.notification-warning .notification-icon {
+    color: var(--warning-color);
+}
+
+/* ---------- Calendar Widget ---------- */
+.calendar-widget {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md);
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.calendar-title {
+    font-weight: 600;
+}
+
+.calendar-nav {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.calendar-nav-btn {
+    background: none;
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.calendar-nav-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background-color: var(--light-gray);
+}
+
+.calendar-day-name {
+    padding: var(--space-sm);
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted-text);
+}
+
+.calendar-dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-date {
+    padding: var(--space-md);
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.calendar-date:hover {
+    background-color: var(--light-gray);
+}
+
+.calendar-date.active {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.calendar-date.today {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.calendar-date.other-month {
+    color: var(--muted-text);
+    opacity: 0.5;
+}
+
+.calendar-event-indicator {
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+}
+
+/* ---------- File Upload ---------- */
+.file-upload {
+    border: 2px dashed var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    text-align: center;
+    position: relative;
+    transition: border-color 0.3s;
+    cursor: pointer;
+}
+
+.file-upload:hover, .file-upload.dragover {
+    border-color: var(--primary-color);
+}
+
+.file-upload-icon {
+    font-size: 2rem;
+    color: var(--muted-text);
+    margin-bottom: var(--space-md);
+}
+
+.file-upload-text {
+    color: var(--muted-text);
+    margin-bottom: var(--space-md);
+}
+
+.file-upload-btn {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.file-upload-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+.file-upload-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-list {
+    margin-top: var(--space-lg);
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    padding: var(--space-sm);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--space-sm);
+}
+
+.file-item-icon {
+    margin-right: var(--space-md);
+    color: var(--muted-text);
+}
+
+.file-item-info {
+    flex: 1;
+}
+
+.file-item-name {
+    font-weight: 500;
+    margin-bottom: var(--space-xs);
+}
+
+.file-item-size {
+    font-size: 0.8rem;
+    color: var(--muted-text);
+}
+
+.file-item-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.file-item-btn {
+    background: none;
+    border: none;
+    color: var(--muted-text);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.file-item-btn:hover {
+    color: var(--primary-color);
+}

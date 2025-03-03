@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Australian Merger Tracker</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/img/logo.png" alt="Merger Tracker Logo" class="logo">
+                <h1>Merger Tracker</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active" data-page="dashboard">
+                        <a href="#dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item" data-page="mergers-list">
+                        <a href="#mergers-list"><i class="fas fa-list"></i> All Mergers</a>
+                    </li>
+                    <li class="nav-item" data-page="statistics">
+                        <a href="#statistics"><i class="fas fa-chart-bar"></i> Statistics</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <p>Data updated: <span id="last-update-date">Loading...</span></p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button id="sidebar-toggle" class="sidebar-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 id="page-title">Dashboard</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-container">
+                        <input type="text" id="search-input" placeholder="Search mergers...">
+                        <button id="search-button"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="header-actions">
+                        <button id="export-button" class="btn btn-secondary">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button id="refresh-button" class="btn btn-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dynamic Content Container -->
+            <div id="content-container" class="content-container">
+                <!-- Content will be loaded here dynamically via JavaScript -->
+                <!-- Temporary loading state -->
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                    <p>Loading data...</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Merger Detail Modal (for quick previews) -->
+        <div id="merger-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">Merger Details</h2>
+                    <button id="modal-close" class="modal-close">&times;</button>
+                </div>
+                <div id="modal-body" class="modal-body">
+                    <!-- Modal content will be populated dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button id="modal-view-full" class="btn btn-primary">View Full Details</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates for page content -->
+    <template id="dashboard-template">
+        <div class="dashboard-container">
+            <div class="dashboard-row">
+                <!-- Stats Cards Row -->
+                <div class="stats-cards">
+                    <div class="stats-card" id="total-active-card">
+                        <div class="stats-card-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="stats-card-content">
+                            <h3>Active Reviews</h3>
+                            <p class="stats-card-value">0</p>
+                        </div>
+                    </div>
+                    <div class="stats-card" id="phase1-card">
+                        <div class="stats-card-icon phase1">
+                            <i class="fas fa-hourglass-start"></i>
+                        </div>
+                        <div class="stats-card-content">
+                            <h3>Phase 1</h3>
+                            <p class="stats-card-value">0</p>
+                        </div>
+                    </div>
+                    <div class="stats-card" id="phase2-card">
+                        <div class="stats-card-icon phase2">
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
+                        <div class="stats-card-content">
+                            <h3>Phase 2</h3>
+                            <p class="stats-card-value">0</p>
+                        </div>
+                    </div>
+                    <div class="stats-card" id="public-benefit-card">
+                        <div class="stats-card-icon public-benefit">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <div class="stats-card-content">
+                            <h3>Public Benefit</h3>
+                            <p class="stats-card-value">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-row">
+                <!-- Charts Row -->
+                <div class="dashboard-col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Status Distribution</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="status-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Average Review Duration</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="duration-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-row">
+                <!-- Tables Row -->
+                <div class="dashboard-col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Upcoming Deadlines</h3>
+                            <a href="#mergers-list?filter=upcoming" class="card-link">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <table class="data-table" id="deadlines-table">
+                                <thead>
+                                    <tr>
+                                        <th>Merger</th>
+                                        <th>Type</th>
+                                        <th>Deadline</th>
+                                        <th>Days Left</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Will be populated dynamically -->
+                                    <tr>
+                                        <td colspan="4" class="no-data">Loading deadlines...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recent Activity</h3>
+                            <a href="#mergers-list?filter=recent" class="card-link">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <ul class="activity-list" id="activity-list">
+                                <!-- Will be populated dynamically -->
+                                <li class="no-data">Loading recent activity...</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="mergers-list-template">
+        <div class="mergers-list-container">
+            <div class="filters-bar">
+                <div class="filter-group">
+                    <label for="status-filter">Status:</label>
+                    <select id="status-filter" class="filter-select">
+                        <option value="all">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="phase1">Phase 1</option>
+                        <option value="phase2">Phase 2</option>
+                        <option value="public-benefit">Public Benefit</option>
+                        <option value="completed">Completed</option>
+                        <option value="rejected">Rejected</option>
+                        <option value="withdrawn">Withdrawn</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="date-from">From:</label>
+                    <input type="date" id="date-from" class="filter-date">
+                </div>
+                <div class="filter-group">
+                    <label for="date-to">To:</label>
+                    <input type="date" id="date-to" class="filter-date">
+                </div>
+                <div class="filter-group">
+                    <label for="industry-filter">Industry:</label>
+                    <select id="industry-filter" class="filter-select">
+                        <option value="all">All Industries</option>
+                        <!-- Will be populated dynamically -->
+                    </select>
+                </div>
+                <button id="filter-apply" class="btn btn-secondary">Apply Filters</button>
+                <button id="filter-reset" class="btn btn-outline">Reset</button>
+            </div>
+
+            <div class="mergers-table-container">
+                <table class="data-table mergers-table" id="mergers-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Acquirer</th>
+                            <th>Target</th>
+                            <th>Notification Date</th>
+                            <th>Status</th>
+                            <th>Current Phase</th>
+                            <th>Expected Completion</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Will be populated dynamically -->
+                        <tr>
+                            <td colspan="8" class="no-data">Loading mergers...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <button id="pagination-prev" class="pagination-btn" disabled>
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <div id="pagination-info">Page 1 of 1</div>
+                <button id="pagination-next" class="pagination-btn" disabled>
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <template id="merger-detail-template">
+        <div class="merger-detail-container">
+            <div class="merger-header">
+                <div class="merger-title">
+                    <h2 id="merger-title">Merger Title</h2>
+                    <div class="merger-badges">
+                        <span id="merger-status-badge" class="badge badge-primary">Status</span>
+                        <span id="merger-phase-badge" class="badge badge-secondary">Phase</span>
+                    </div>
+                </div>
+                <div class="merger-actions">
+                    <button id="back-button" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </button>
+                </div>
+            </div>
+
+            <div class="merger-overview">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="overview-grid">
+                            <div class="overview-item">
+                                <h4>Acquirer</h4>
+                                <p id="merger-acquirer">Company Name</p>
+                            </div>
+                            <div class="overview-item">
+                                <h4>Target</h4>
+                                <p id="merger-target">Company Name</p>
+                            </div>
+                            <div class="overview-item">
+                                <h4>Type</h4>
+                                <p id="merger-type">Acquisition Type</p>
+                            </div>
+                            <div class="overview-item">
+                                <h4>Notification Date</h4>
+                                <p id="merger-notification-date">Date</p>
+                            </div>
+                            <div class="overview-item">
+                                <h4>Expected Completion</h4>
+                                <p id="merger-expected-completion">Date</p>
+                            </div>
+                            <div class="overview-item">
+                                <h4>Markets Affected</h4>
+                                <p id="merger-markets">Market names</p>
+                            </div>
+                        </div>
+                        <div class="overview-description">
+                            <h4>Description</h4>
+                            <p id="merger-description">Description text...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="merger-timeline">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Review Timeline</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="timeline-visualization" class="timeline-visualization">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="merger-details-grid">
+                <div class="card" id="phase1-details-card">
+                    <div class="card-header">
+                        <h3>Phase 1 Review</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="details-grid">
+                            <div class="details-item">
+                                <h4>Start Date</h4>
+                                <p id="phase1-start-date">Date</p>
+                            </div>
+                            <div class="details-item">
+                                <h4>Expected End Date</h4>
+                                <p id="phase1-expected-end-date">Date</p>
+                            </div>
+                            <div class="details-item">
+                                <h4>Actual End Date</h4>
+                                <p id="phase1-actual-end-date">Date</p>
+                            </div>
+                            <div class="details-item">
+                                <h4>Outcome</h4>
+                                <p id="phase1-outcome">Outcome</p>
+                            </div>
+                        </div>
+                        <div class="details-notes">
+                            <h4>Determination Details</h4>
+                            <p id="phase1-determination-details">Details text...</p>
+                        </div>
+                        <div class="details-documents">
+                            <h4>Documents</h4>
+                            <ul id="phase1-documents" class="documents-list">
+                                <!-- Will be populated dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="phase2-details-card">
+                    <div class="card-header">
+                        <h3>Phase 2 Review</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="details-grid">
+                            <div class="details-item">
+                                <h4>Start Date</h4>
+                                <p id="phase2-start-date">Date</p>
+                            </div>
+                            <div class="details-item">
+                                <h4>Competition Concerns Due</h4>
+                                <p id="phase2-concerns-due-date">Date</p>
+                            </div>
+                            <div class="details-item">
+                                <h4>Competition Concerns Issued</h4>
+                                <p id="phase2-concerns-issued-date">Date</p>
+                            </div>
+                            <div class="details-item">
+                                <h4>Submissions Due</h4>
+                                <p id="phase2-submissions-due-date">Date</p>
+                            </div>
+                            <div class="details-item">
+                                <h4>Expected End Date</h4>
+                                <p id="phase2-expected-end-date">Date</p>
+                            </div>
+                            <div class="details-item">
+                                <h4>Actual End Date</h4>
+                                <p id="phase2-actual-end-date">Date</p>
+                            </div>
+                            <div class="details-item">
+                                <h4>Outcome</h4>
+                                <p id="phase2-outcome">Outcome</p>
+                            </div>
+                        </div>
+                        <div class="details-notes">
+                            <h4>Competition Concerns</h4>
+                            <p id="phase2-concerns-details">Details text...</p>
+                        </div>
+                        <div class="details-notes">
+                            <h4>Determination Details</h4>
+                            <p id="phase2-determination-details">Details text...</p>
+                        </div>
+                        <div class="details-documents">
+                            <h4>Documents</h4>
+                            <ul id="phase2-documents" class="documents-list">
+                                <!-- Will be populated dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="public-benefit-details-card">
+                    <div class="card-header">
+                        <h3>Public Benefit Assessment</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="details-grid">
+                            <div class="details-item">
+                                <h4>Application Date</h4>
+                                <p id="public-benefit-application-date">Date</p>
+                            </div>
+                            <div class="details-item">
+                                <h4>Assessment Issued</h4>
+                                <p id="public-benefit-assessment-date">Date</p>
+                            </div>
+                            <div class="details-item">
+                                <h4>Submissions Due</h4>
+                                <p id="public-benefit-submissions-due-date">Date</p>
+                            </div>
+                            <div class="details-item">
+                                <h4>Expected Determination</h4>
+                                <p id="public-benefit-expected-determination-date">Date</p>
+                            </div>
+                            <div class="details-item">
+                                <h4>Actual Determination</h4>
+                                <p id="public-benefit-actual-determination-date">Date</p>
+                            </div>
+                            <div class="details-item">
+                                <h4>Outcome</h4>
+                                <p id="public-benefit-outcome">Outcome</p>
+                            </div>
+                        </div>
+                        <div class="details-notes">
+                            <h4>Determination Details</h4>
+                            <p id="public-benefit-determination-details">Details text...</p>
+                        </div>
+                        <div class="details-documents">
+                            <h4>Documents</h4>
+                            <ul id="public-benefit-documents" class="documents-list">
+                                <!-- Will be populated dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="conditions-card">
+                    <div class="card-header">
+                        <h3>Conditions</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="data-table" id="conditions-table">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Deadline</th>
+                                    <th>Compliance Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="conditions-table-body">
+                                <!-- Will be populated dynamically -->
+                                <tr>
+                                    <td colspan="4" class="no-data">No conditions imposed</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card" id="tribunal-reviews-card">
+                    <div class="card-header">
+                        <h3>Tribunal Reviews</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="data-table" id="tribunal-reviews-table">
+                            <thead>
+                                <tr>
+                                    <th>Review Type</th>
+                                    <th>Application Date</th>
+                                    <th>Applicant</th>
+                                    <th>Expected Determination</th>
+                                    <th>Actual Determination</th>
+                                    <th>Outcome</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tribunal-reviews-table-body">
+                                <!-- Will be populated dynamically -->
+                                <tr>
+                                    <td colspan="6" class="no-data">No tribunal reviews</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="statistics-template">
+        <div class="statistics-container">
+            <div class="statistics-filters">
+                <div class="filter-group">
+                    <label for="stats-date-from">From:</label>
+                    <input type="date" id="stats-date-from" class="filter-date">
+                </div>
+                <div class="filter-group">
+                    <label for="stats-date-to">To:</label>
+                    <input type="date" id="stats-date-to" class="filter-date">
+                </div>
+                <button id="stats-filter-apply" class="btn btn-secondary">Apply Filters</button>
+                <button id="stats-filter-reset" class="btn btn-outline">Reset</button>
+            </div>
+
+            <div class="statistics-row">
+                <div class="statistics-col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Review Outcomes</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="outcomes-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="statistics-col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Average Review Duration</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="stats-duration-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="statistics-row">
+                <div class="statistics-col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Reviews Over Time</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="reviews-time-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="statistics-col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Phase Progression</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="phase-progression-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="statistics-row">
+                <div class="statistics-col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Reviews by Industry</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="industry-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="statistics-col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Extensions Analysis</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="extensions-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Core Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="js/utils/date-utils.js"></script>
+    <script src="js/utils/formatters.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/components/timeline.js"></script>
+    <script src="js/components/status-badge.js"></script>
+    <script src="js/components/data-table.js"></script>
+    <script src="js/pages/dashboard.js"></script>
+    <script src="js/pages/mergers-list.js"></script>
+    <script src="js/pages/merger-detail.js"></script>
+    <script src="js/pages/statistics.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
