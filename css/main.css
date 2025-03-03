@@ -1014,3 +1014,38 @@ ul, ol {
         width: 100%;
     }
 }
+
+.notification-banner {
+    background-color: #e3f2fd;
+    border-left: 4px solid #0056b3;
+    color: #343a40;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 0;
+    z-index: 1001;
+  }
+  
+  .notification-banner i {
+    color: #0056b3;
+    margin-right: 10px;
+    font-size: 1.1rem;
+  }
+  
+  .notification-banner span {
+    flex: 1;
+  }
+  
+  .notification-banner .notification-close {
+    background: none;
+    border: none;
+    color: #6c757d;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 5px;
+  }
+  
+  .notification-banner .notification-close:hover {
+    color: #343a40;
+  }
