@@ -14,12 +14,12 @@ const Router = (() => {
         'mergers-list': {
             template: 'mergers-list-template',
             controller: MergersList,
-            title: 'All Mergers'
+            title: 'All mergers'
         },
         'merger-detail': {
             template: 'merger-detail-template',
             controller: MergerDetail,
-            title: 'Merger Details'
+            title: 'Merger details'
         },
         statistics: {
             template: 'statistics-template',

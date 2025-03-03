@@ -26,7 +26,7 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <img src="assets/img/logo.png" alt="Merger Tracker Logo" class="logo">
-                <h1>Merger Tracker</h1>
+                <h1>Merger tracker</h1>
             </div>
             <nav class="sidebar-nav">
                 <ul>
@@ -34,7 +34,7 @@
                         <a href="#dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
                     </li>
                     <li class="nav-item" data-page="mergers-list">
-                        <a href="#mergers-list"><i class="fas fa-list"></i> All Mergers</a>
+                        <a href="#mergers-list"><i class="fas fa-list"></i> All mergers</a>
                     </li>
                     <li class="nav-item" data-page="statistics">
                         <a href="#statistics"><i class="fas fa-chart-bar"></i> Statistics</a>
@@ -84,14 +84,14 @@
         <div id="merger-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2 id="modal-title">Merger Details</h2>
+                    <h2 id="modal-title">Merger details</h2>
                     <button id="modal-close" class="modal-close">&times;</button>
                 </div>
                 <div id="modal-body" class="modal-body">
                     <!-- Modal content will be populated dynamically -->
                 </div>
                 <div class="modal-footer">
-                    <button id="modal-view-full" class="btn btn-primary">View Full Details</button>
+                    <button id="modal-view-full" class="btn btn-primary">View full details</button>
                 </div>
             </div>
         </div>
@@ -101,14 +101,14 @@
     <template id="dashboard-template">
         <div class="dashboard-container">
             <div class="dashboard-row">
-                <!-- Stats Cards Row -->
+                <!-- Stats cards row -->
                 <div class="stats-cards">
                     <div class="stats-card" id="total-active-card">
                         <div class="stats-card-icon">
                             <i class="fas fa-rocket"></i>
                         </div>
                         <div class="stats-card-content">
-                            <h3>Active Reviews</h3>
+                            <h3>Active reviews</h3>
                             <p class="stats-card-value">0</p>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
                             <i class="fas fa-balance-scale"></i>
                         </div>
                         <div class="stats-card-content">
-                            <h3>Public Benefit</h3>
+                            <h3>Public benefit</h3>
                             <p class="stats-card-value">0</p>
                         </div>
                     </div>
@@ -143,11 +143,11 @@
             </div>
 
             <div class="dashboard-row">
-                <!-- Charts Row -->
+                <!-- Charts row -->
                 <div class="dashboard-col">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Status Distribution</h3>
+                            <h3>Status distribution</h3>
                         </div>
                         <div class="card-body">
                             <div id="status-chart" class="chart"></div>
@@ -157,7 +157,7 @@
                 <div class="dashboard-col">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Average Review Duration</h3>
+                            <h3>Average review duration</h3>
                         </div>
                         <div class="card-body">
                             <div id="duration-chart" class="chart"></div>
@@ -167,12 +167,12 @@
             </div>
 
             <div class="dashboard-row">
-                <!-- Tables Row -->
+                <!-- Tables row -->
                 <div class="dashboard-col">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Upcoming Deadlines</h3>
-                            <a href="#mergers-list?filter=upcoming" class="card-link">View All</a>
+                            <h3>Upcoming deadlines</h3>
+                            <a href="#mergers-list?filter=upcoming" class="card-link">View all</a>
                         </div>
                         <div class="card-body">
                             <table class="data-table" id="deadlines-table">
@@ -181,7 +181,7 @@
                                         <th>Merger</th>
                                         <th>Type</th>
                                         <th>Deadline</th>
-                                        <th>Days Left</th>
+                                        <th>Days left</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -197,8 +197,8 @@
                 <div class="dashboard-col">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Recent Activity</h3>
-                            <a href="#mergers-list?filter=recent" class="card-link">View All</a>
+                            <h3>Recent activity</h3>
+                            <a href="#mergers-list?filter=recent" class="card-link">View all</a>
                         </div>
                         <div class="card-body">
                             <ul class="activity-list" id="activity-list">
@@ -218,11 +218,11 @@
                 <div class="filter-group">
                     <label for="status-filter">Status:</label>
                     <select id="status-filter" class="filter-select">
-                        <option value="all">All Statuses</option>
+                        <option value="all">All statuses</option>
                         <option value="pending">Pending</option>
                         <option value="phase1">Phase 1</option>
                         <option value="phase2">Phase 2</option>
-                        <option value="public-benefit">Public Benefit</option>
+                        <option value="public-benefit">Public benefit</option>
                         <option value="completed">Completed</option>
                         <option value="rejected">Rejected</option>
                         <option value="withdrawn">Withdrawn</option>
@@ -239,11 +239,11 @@
                 <div class="filter-group">
                     <label for="industry-filter">Industry:</label>
                     <select id="industry-filter" class="filter-select">
-                        <option value="all">All Industries</option>
+                        <option value="all">All industries</option>
                         <!-- Will be populated dynamically -->
                     </select>
                 </div>
-                <button id="filter-apply" class="btn btn-secondary">Apply Filters</button>
+                <button id="filter-apply" class="btn btn-secondary">Apply filters</button>
                 <button id="filter-reset" class="btn btn-outline">Reset</button>
             </div>
 
@@ -254,10 +254,10 @@
                             <th>Title</th>
                             <th>Acquirer</th>
                             <th>Target</th>
-                            <th>Notification Date</th>
+                            <th>Notification date</th>
                             <th>Status</th>
-                            <th>Current Phase</th>
-                            <th>Expected Completion</th>
+                            <th>Current phase</th>
+                            <th>Expected completion</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -286,7 +286,7 @@
         <div class="merger-detail-container">
             <div class="merger-header">
                 <div class="merger-title">
-                    <h2 id="merger-title">Merger Title</h2>
+                    <h2 id="merger-title">Merger title</h2>
                     <div class="merger-badges">
                         <span id="merger-status-badge" class="badge badge-primary">Status</span>
                         <span id="merger-phase-badge" class="badge badge-secondary">Phase</span>
@@ -294,7 +294,7 @@
                 </div>
                 <div class="merger-actions">
                     <button id="back-button" class="btn btn-outline">
-                        <i class="fas fa-arrow-left"></i> Back to List
+                        <i class="fas fa-arrow-left"></i> Back to list
                     </button>
                 </div>
             </div>
@@ -308,26 +308,26 @@
                         <div class="overview-grid">
                             <div class="overview-item">
                                 <h4>Acquirer</h4>
-                                <p id="merger-acquirer">Company Name</p>
+                                <p id="merger-acquirer">Company name</p>
                             </div>
                             <div class="overview-item">
                                 <h4>Target</h4>
-                                <p id="merger-target">Company Name</p>
+                                <p id="merger-target">Company name</p>
                             </div>
                             <div class="overview-item">
                                 <h4>Type</h4>
-                                <p id="merger-type">Acquisition Type</p>
+                                <p id="merger-type">Acquisition type</p>
                             </div>
                             <div class="overview-item">
-                                <h4>Notification Date</h4>
+                                <h4>Notification date</h4>
                                 <p id="merger-notification-date">Date</p>
                             </div>
                             <div class="overview-item">
-                                <h4>Expected Completion</h4>
+                                <h4>Expected completion</h4>
                                 <p id="merger-expected-completion">Date</p>
                             </div>
                             <div class="overview-item">
-                                <h4>Markets Affected</h4>
+                                <h4>Markets affected</h4>
                                 <p id="merger-markets">Market names</p>
                             </div>
                         </div>
@@ -342,7 +342,7 @@
             <div class="merger-timeline">
                 <div class="card">
                     <div class="card-header">
-                        <h3>Review Timeline</h3>
+                        <h3>Review timeline</h3>
                     </div>
                     <div class="card-body">
                         <div id="timeline-visualization" class="timeline-visualization">
@@ -355,20 +355,20 @@
             <div class="merger-details-grid">
                 <div class="card" id="phase1-details-card">
                     <div class="card-header">
-                        <h3>Phase 1 Review</h3>
+                        <h3>Phase 1 review</h3>
                     </div>
                     <div class="card-body">
                         <div class="details-grid">
                             <div class="details-item">
-                                <h4>Start Date</h4>
+                                <h4>Start date</h4>
                                 <p id="phase1-start-date">Date</p>
                             </div>
                             <div class="details-item">
-                                <h4>Expected End Date</h4>
+                                <h4>Expected end date</h4>
                                 <p id="phase1-expected-end-date">Date</p>
                             </div>
                             <div class="details-item">
-                                <h4>Actual End Date</h4>
+                                <h4>Actual end date</h4>
                                 <p id="phase1-actual-end-date">Date</p>
                             </div>
                             <div class="details-item">
@@ -377,7 +377,7 @@
                             </div>
                         </div>
                         <div class="details-notes">
-                            <h4>Determination Details</h4>
+                            <h4>Determination details</h4>
                             <p id="phase1-determination-details">Details text...</p>
                         </div>
                         <div class="details-documents">
@@ -391,32 +391,32 @@
 
                 <div class="card" id="phase2-details-card">
                     <div class="card-header">
-                        <h3>Phase 2 Review</h3>
+                        <h3>Phase 2 review</h3>
                     </div>
                     <div class="card-body">
                         <div class="details-grid">
                             <div class="details-item">
-                                <h4>Start Date</h4>
+                                <h4>Start date</h4>
                                 <p id="phase2-start-date">Date</p>
                             </div>
                             <div class="details-item">
-                                <h4>Competition Concerns Due</h4>
+                                <h4>Competition concerns due</h4>
                                 <p id="phase2-concerns-due-date">Date</p>
                             </div>
                             <div class="details-item">
-                                <h4>Competition Concerns Issued</h4>
+                                <h4>Competition concerns issued</h4>
                                 <p id="phase2-concerns-issued-date">Date</p>
                             </div>
                             <div class="details-item">
-                                <h4>Submissions Due</h4>
+                                <h4>Submissions due</h4>
                                 <p id="phase2-submissions-due-date">Date</p>
                             </div>
                             <div class="details-item">
-                                <h4>Expected End Date</h4>
+                                <h4>Expected end date</h4>
                                 <p id="phase2-expected-end-date">Date</p>
                             </div>
                             <div class="details-item">
-                                <h4>Actual End Date</h4>
+                                <h4>Actual end date</h4>
                                 <p id="phase2-actual-end-date">Date</p>
                             </div>
                             <div class="details-item">
@@ -425,11 +425,11 @@
                             </div>
                         </div>
                         <div class="details-notes">
-                            <h4>Competition Concerns</h4>
+                            <h4>Competition concerns</h4>
                             <p id="phase2-concerns-details">Details text...</p>
                         </div>
                         <div class="details-notes">
-                            <h4>Determination Details</h4>
+                            <h4>Determination details</h4>
                             <p id="phase2-determination-details">Details text...</p>
                         </div>
                         <div class="details-documents">
@@ -443,28 +443,28 @@
 
                 <div class="card" id="public-benefit-details-card">
                     <div class="card-header">
-                        <h3>Public Benefit Assessment</h3>
+                        <h3>Public benefit assessment</h3>
                     </div>
                     <div class="card-body">
                         <div class="details-grid">
                             <div class="details-item">
-                                <h4>Application Date</h4>
+                                <h4>Application date</h4>
                                 <p id="public-benefit-application-date">Date</p>
                             </div>
                             <div class="details-item">
-                                <h4>Assessment Issued</h4>
+                                <h4>Assessment issued</h4>
                                 <p id="public-benefit-assessment-date">Date</p>
                             </div>
                             <div class="details-item">
-                                <h4>Submissions Due</h4>
+                                <h4>Submissions due</h4>
                                 <p id="public-benefit-submissions-due-date">Date</p>
                             </div>
                             <div class="details-item">
-                                <h4>Expected Determination</h4>
+                                <h4>Expected determination</h4>
                                 <p id="public-benefit-expected-determination-date">Date</p>
                             </div>
                             <div class="details-item">
-                                <h4>Actual Determination</h4>
+                                <h4>Actual determination</h4>
                                 <p id="public-benefit-actual-determination-date">Date</p>
                             </div>
                             <div class="details-item">
@@ -473,7 +473,7 @@
                             </div>
                         </div>
                         <div class="details-notes">
-                            <h4>Determination Details</h4>
+                            <h4>Determination details</h4>
                             <p id="public-benefit-determination-details">Details text...</p>
                         </div>
                         <div class="details-documents">
@@ -496,7 +496,7 @@
                                     <th>Description</th>
                                     <th>Status</th>
                                     <th>Deadline</th>
-                                    <th>Compliance Date</th>
+                                    <th>Compliance date</th>
                                 </tr>
                             </thead>
                             <tbody id="conditions-table-body">
@@ -511,17 +511,17 @@
 
                 <div class="card" id="tribunal-reviews-card">
                     <div class="card-header">
-                        <h3>Tribunal Reviews</h3>
+                        <h3>Tribunal reviews</h3>
                     </div>
                     <div class="card-body">
                         <table class="data-table" id="tribunal-reviews-table">
                             <thead>
                                 <tr>
-                                    <th>Review Type</th>
-                                    <th>Application Date</th>
+                                    <th>Review type</th>
+                                    <th>Application date</th>
                                     <th>Applicant</th>
-                                    <th>Expected Determination</th>
-                                    <th>Actual Determination</th>
+                                    <th>Expected determination</th>
+                                    <th>Actual determination</th>
                                     <th>Outcome</th>
                                 </tr>
                             </thead>
@@ -549,7 +549,7 @@
                     <label for="stats-date-to">To:</label>
                     <input type="date" id="stats-date-to" class="filter-date">
                 </div>
-                <button id="stats-filter-apply" class="btn btn-secondary">Apply Filters</button>
+                <button id="stats-filter-apply" class="btn btn-secondary">Apply filters</button>
                 <button id="stats-filter-reset" class="btn btn-outline">Reset</button>
             </div>
 
@@ -557,7 +557,7 @@
                 <div class="statistics-col">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Review Outcomes</h3>
+                            <h3>Review outcomes</h3>
                         </div>
                         <div class="card-body">
                             <div id="outcomes-chart" class="chart"></div>
@@ -567,7 +567,7 @@
                 <div class="statistics-col">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Average Review Duration</h3>
+                            <h3>Average review duration</h3>
                         </div>
                         <div class="card-body">
                             <div id="stats-duration-chart" class="chart"></div>
@@ -580,7 +580,7 @@
                 <div class="statistics-col">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Reviews Over Time</h3>
+                            <h3>Reviews over time</h3>
                         </div>
                         <div class="card-body">
                             <div id="reviews-time-chart" class="chart"></div>
@@ -590,7 +590,7 @@
                 <div class="statistics-col">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Phase Progression</h3>
+                            <h3>Phase progression</h3>
                         </div>
                         <div class="card-body">
                             <div id="phase-progression-chart" class="chart"></div>
@@ -603,7 +603,7 @@
                 <div class="statistics-col">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Reviews by Industry</h3>
+                            <h3>Reviews by industry</h3>
                         </div>
                         <div class="card-body">
                             <div id="industry-chart" class="chart"></div>
@@ -613,7 +613,7 @@
                 <div class="statistics-col">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Extensions Analysis</h3>
+                            <h3>Extensions analysis</h3>
                         </div>
                         <div class="card-body">
                             <div id="extensions-chart" class="chart"></div>

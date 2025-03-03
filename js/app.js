@@ -229,14 +229,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
                     
                 default:
-                    App.showNotification('Export Not Available', 'Export is not available for this view.', 'warning');
+                    App.showNotification('Export not available', 'Export is not available for this view.', 'warning');
             }
         },
         
         // Export data to CSV
         exportToCSV: (data, filename) => {
             if (!data || !data.length) {
-                App.showNotification('Export Error', 'No data available to export.', 'error');
+                App.showNotification('Export error', 'No data available to export.', 'error');
                 return;
             }
             
@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
             
-            App.showNotification('Export Complete', `Data exported to ${filename}`, 'success');
+            App.showNotification('Export complete', `Data exported to ${filename}`, 'success');
         }
     };
     

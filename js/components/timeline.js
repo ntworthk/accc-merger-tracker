@@ -85,7 +85,7 @@ const Timeline = (() => {
             const phase1Status = phase1.actual_end_date ? 'completed' : 'current';
             milestones.push({
                 date: phase1.start_date,
-                label: 'Phase 1 Start',
+                label: 'Phase 1 start',
                 status: 'completed',
                 icon: 'fa-play'
             });
@@ -109,7 +109,7 @@ const Timeline = (() => {
             } else {
                 milestones.push({
                     date: phase1.expected_end_date,
-                    label: 'Phase 1 Decision Due',
+                    label: 'Phase 1 decision due',
                     status: 'upcoming',
                     icon: 'fa-calendar-check'
                 });
@@ -120,7 +120,7 @@ const Timeline = (() => {
         if (hasPhase2) {
             milestones.push({
                 date: phase2.start_date,
-                label: 'Phase 2 Start',
+                label: 'Phase 2 start',
                 status: 'completed',
                 icon: 'fa-play'
             });
@@ -128,14 +128,14 @@ const Timeline = (() => {
             if (phase2.competition_concerns_issued_date) {
                 milestones.push({
                     date: phase2.competition_concerns_issued_date,
-                    label: 'Competition Concerns',
+                    label: 'Competition concerns',
                     status: 'completed',
                     icon: 'fa-exclamation-triangle'
                 });
             } else if (phase2.competition_concerns_due_date) {
                 milestones.push({
                     date: phase2.competition_concerns_due_date,
-                    label: 'Concerns Due',
+                    label: 'Concerns due',
                     status: 'upcoming',
                     icon: 'fa-calendar-check'
                 });
@@ -159,7 +159,7 @@ const Timeline = (() => {
             } else {
                 milestones.push({
                     date: phase2.expected_end_date,
-                    label: 'Phase 2 Decision Due',
+                    label: 'Phase 2 decision due',
                     status: 'upcoming',
                     icon: 'fa-calendar-check'
                 });
@@ -170,7 +170,7 @@ const Timeline = (() => {
         if (hasPublicBenefit) {
             milestones.push({
                 date: publicBenefit.application_date,
-                label: 'Public Benefit Application',
+                label: 'Public benefit application',
                 status: 'completed',
                 icon: 'fa-balance-scale'
             });
@@ -178,14 +178,14 @@ const Timeline = (() => {
             if (publicBenefit.assessment_issued_date) {
                 milestones.push({
                     date: publicBenefit.assessment_issued_date,
-                    label: 'Public Benefit Assessment',
+                    label: 'Public benefit assessment',
                     status: 'completed',
                     icon: 'fa-file-invoice'
                 });
             } else if (publicBenefit.assessment_issued_date) {
                 milestones.push({
                     date: publicBenefit.assessment_issued_date,
-                    label: 'Assessment Due',
+                    label: 'Assessment due',
                     status: 'upcoming',
                     icon: 'fa-calendar-check'
                 });
@@ -201,14 +201,14 @@ const Timeline = (() => {
 
                 milestones.push({
                     date: publicBenefit.actual_determination_date,
-                    label: `Public Benefit ${pbOutcome === 'approved' ? 'Approved' : 'Rejected'}`,
+                    label: `Public benefit ${pbOutcome === 'approved' ? 'approved' : 'rejected'}`,
                     status: 'completed',
                     icon: outcomeIcon
                 });
             } else {
                 milestones.push({
                     date: publicBenefit.expected_determination_date,
-                    label: 'Public Benefit Decision Due',
+                    label: 'Public benefit decision due',
                     status: 'upcoming',
                     icon: 'fa-calendar-check'
                 });

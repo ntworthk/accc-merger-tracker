@@ -413,7 +413,7 @@ const API = (() => {
                         deadlines.push({
                             merger_id: merger.merger_id,
                             merger_title: merger.title,
-                            type: 'Phase 1 Determination',
+                            type: 'Phase 1 determination',
                             deadline: merger.phase1.expected_end_date,
                             daysLeft: Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24))
                         });
@@ -429,7 +429,7 @@ const API = (() => {
                             deadlines.push({
                                 merger_id: merger.merger_id,
                                 merger_title: merger.title,
-                                type: 'Competition Concerns',
+                                type: 'Competition concerns',
                                 deadline: merger.phase2.competition_concerns_due_date,
                                 daysLeft: Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24))
                             });
@@ -443,7 +443,7 @@ const API = (() => {
                             deadlines.push({
                                 merger_id: merger.merger_id,
                                 merger_title: merger.title,
-                                type: 'Phase 2 Determination',
+                                type: 'Phase 2 determination',
                                 deadline: merger.phase2.expected_end_date,
                                 daysLeft: Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24))
                             });
@@ -460,7 +460,7 @@ const API = (() => {
                             deadlines.push({
                                 merger_id: merger.merger_id,
                                 merger_title: merger.title,
-                                type: 'Public Benefit Assessment',
+                                type: 'Public benefit assessment',
                                 deadline: merger.public_benefit.assessment_issued_date,
                                 daysLeft: Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24))
                             });
@@ -474,7 +474,7 @@ const API = (() => {
                             deadlines.push({
                                 merger_id: merger.merger_id,
                                 merger_title: merger.title,
-                                type: 'Public Benefit Determination',
+                                type: 'Public benefit determination',
                                 deadline: merger.public_benefit.expected_determination_date,
                                 daysLeft: Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24))
                             });

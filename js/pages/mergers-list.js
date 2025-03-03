@@ -87,7 +87,7 @@ const MergersList = (() => {
             
             if (industryFilter) {
                 // Keep the "All Industries" option
-                let options = '<option value="all">All Industries</option>';
+                let options = '<option value="all">All industries</option>';
                 
                 // Add each industry
                 industries.forEach(industry => {
@@ -167,7 +167,7 @@ const MergersList = (() => {
                 currentPhase = 'Phase 2';
                 expectedCompletion = merger.phase2.expected_end_date;
             } else if (merger.public_benefit && !merger.public_benefit.actual_determination_date) {
-                currentPhase = 'Public Benefit';
+                currentPhase = 'Public benefit';
                 expectedCompletion = merger.public_benefit.expected_determination_date;
             } else if (merger.status === 'completed' || merger.status === 'rejected' || merger.status === 'withdrawn') {
                 currentPhase = 'Completed';
@@ -201,10 +201,10 @@ const MergersList = (() => {
                 <td>${DateUtils.formatDate(expectedCompletion)}</td>
                 <td class="table-actions">
                     <div class="action-buttons">
-                        <button class="action-btn view-details" data-merger-id="${merger.merger_id}" title="View Details">
+                        <button class="action-btn view-details" data-merger-id="${merger.merger_id}" title="View details">
                             <i class="fas fa-eye"></i>
                         </button>
-                        <button class="action-btn quick-view" data-merger-id="${merger.merger_id}" title="Quick View">
+                        <button class="action-btn quick-view" data-merger-id="${merger.merger_id}" title="Quick view">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
@@ -424,7 +424,7 @@ const MergersList = (() => {
                 currentPhase = 'Phase 2';
                 expectedCompletion = merger.phase2.expected_end_date;
             } else if (merger.public_benefit && !merger.public_benefit.actual_determination_date) {
-                currentPhase = 'Public Benefit';
+                currentPhase = 'Public benefit';
                 expectedCompletion = merger.public_benefit.expected_determination_date;
             } else if (merger.status === 'completed' || merger.status === 'rejected' || merger.status === 'withdrawn') {
                 currentPhase = 'Completed';

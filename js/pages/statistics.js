@@ -95,7 +95,7 @@ const Statistics = (() => {
         
         // Prepare data
         const data = {
-            labels: ['Cleared', 'Cleared with Conditions', 'Rejected', 'Withdrawn', 'Pending'],
+            labels: ['Cleared', 'Cleared with conditions', 'Rejected', 'Withdrawn', 'Pending'],
             datasets: [{
                 data: [
                     outcomes.cleared,
@@ -170,10 +170,10 @@ const Statistics = (() => {
         
         // Prepare data
         const data = {
-            labels: ['Phase 1', 'Phase 2', 'Public Benefit'],
+            labels: ['Phase 1', 'Phase 2', 'Public benefit'],
             datasets: [
                 {
-                    label: 'Average Days',
+                    label: 'Average days',
                     data: [
                         duration.average_phase1_days,
                         duration.average_phase2_days,
@@ -192,7 +192,7 @@ const Statistics = (() => {
                     borderWidth: 1
                 },
                 {
-                    label: 'Statutory Limit',
+                    label: 'Statutory limit',
                     data: [
                         phase1Statutory,
                         phase2Statutory,
@@ -218,7 +218,7 @@ const Statistics = (() => {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Business Days'
+                        text: 'Business days'
                     }
                 }
             },
@@ -339,7 +339,7 @@ const Statistics = (() => {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Number of Reviews'
+                        text: 'Number of reviews'
                     }
                 }
             },
@@ -399,9 +399,9 @@ const Statistics = (() => {
                 'Phase 2 → Cleared',
                 'Phase 2 → Conditions',
                 'Phase 2 → Rejected',
-                'Rejected → Public Benefit',
-                'Public Benefit → Approved',
-                'Public Benefit → Rejected'
+                'Rejected → Public benefit',
+                'Public benefit → Approved',
+                'Public benefit → Rejected'
             ],
             datasets: [{
                 label: 'Percentage',
@@ -566,9 +566,9 @@ const Statistics = (() => {
         // Generate dummy data for demonstration
         const data = {
             categories: [
-                'Information Request',
+                'Information request',
                 'Commitment',
-                'Section 155 Notice',
+                'Section 155 notice',
                 'Party Request'
             ],
             phase1: [5, 8, 2, 4],
@@ -617,7 +617,7 @@ const Statistics = (() => {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Number of Extensions'
+                        text: 'Number of extensions'
                     }
                 }
             },
@@ -741,20 +741,20 @@ const Statistics = (() => {
             const exportData = [];
             
             // Add filter information
-            exportData.push({ Category: 'Filters', Metric: 'Date From', Value: filterDateFrom || 'All' });
-            exportData.push({ Category: 'Filters', Metric: 'Date To', Value: filterDateTo || 'All' });
+            exportData.push({ Category: 'Filters', Metric: 'Date from', Value: filterDateFrom || 'All' });
+            exportData.push({ Category: 'Filters', Metric: 'Date to', Value: filterDateTo || 'All' });
             
             // Add outcomes
             exportData.push({ Category: 'Outcomes', Metric: 'Cleared', Value: outcomes.cleared });
-            exportData.push({ Category: 'Outcomes', Metric: 'Cleared with Conditions', Value: outcomes.cleared_with_conditions });
+            exportData.push({ Category: 'Outcomes', Metric: 'Cleared with conditions', Value: outcomes.cleared_with_conditions });
             exportData.push({ Category: 'Outcomes', Metric: 'Rejected', Value: outcomes.rejected });
             exportData.push({ Category: 'Outcomes', Metric: 'Withdrawn', Value: outcomes.withdrawn });
             exportData.push({ Category: 'Outcomes', Metric: 'Pending', Value: outcomes.pending });
             
             // Add durations
-            exportData.push({ Category: 'Duration', Metric: 'Average Phase 1 (days)', Value: duration.average_phase1_days });
-            exportData.push({ Category: 'Duration', Metric: 'Average Phase 2 (days)', Value: duration.average_phase2_days });
-            exportData.push({ Category: 'Duration', Metric: 'Average Public Benefit (days)', Value: duration.average_public_benefit_days });
+            exportData.push({ Category: 'Duration', Metric: 'Average phase 1 (days)', Value: duration.average_phase1_days });
+            exportData.push({ Category: 'Duration', Metric: 'Average phase 2 (days)', Value: duration.average_phase2_days });
+            exportData.push({ Category: 'Duration', Metric: 'Average public benefit (days)', Value: duration.average_public_benefit_days });
             
             // Add industries
             industries.forEach(industry => {
@@ -770,7 +770,7 @@ const Statistics = (() => {
             
         } catch (error) {
             console.error('Error exporting statistics data:', error);
-            App.showNotification('Export Error', 'Failed to export statistics data.', 'error');
+            App.showNotification('Export error', 'Failed to export statistics data.', 'error');
         }
     };
     

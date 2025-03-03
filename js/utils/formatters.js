@@ -11,10 +11,10 @@ const Formatters = (() => {
             'pending': { text: 'Pending', className: 'status-badge-pending' },
             'phase1': { text: 'Phase 1', className: 'status-badge-phase1' },
             'phase2': { text: 'Phase 2', className: 'status-badge-phase2' },
-            'public-benefit': { text: 'Public Benefit', className: 'status-badge-public-benefit' },
+            'public-benefit': { text: 'Public benefit', className: 'status-badge-public-benefit' },
             'completed': { text: 'Completed', className: 'status-badge-completed' },
             'cleared': { text: 'Cleared', className: 'status-badge-cleared' },
-            'conditions': { text: 'Cleared with Conditions', className: 'status-badge-conditions' },
+            'conditions': { text: 'Cleared with conditions', className: 'status-badge-conditions' },
             'rejected': { text: 'Rejected', className: 'status-badge-rejected' },
             'withdrawn': { text: 'Withdrawn', className: 'status-badge-withdrawn' }
         };
@@ -37,9 +37,9 @@ const Formatters = (() => {
         if (!outcome) return { text: 'Pending', className: 'status-badge-pending' };
         
         const outcomeMap = {
-            'phase2': { text: 'Proceeded to Phase 2', className: 'status-badge-phase2' },
+            'phase2': { text: 'Proceeded to phase 2', className: 'status-badge-phase2' },
             'cleared': { text: 'Cleared', className: 'status-badge-cleared' },
-            'conditions': { text: 'Cleared with Conditions', className: 'status-badge-conditions' },
+            'conditions': { text: 'Cleared with conditions', className: 'status-badge-conditions' },
             'rejected': { text: 'Rejected', className: 'status-badge-rejected' },
             'withdrawn': { text: 'Withdrawn', className: 'status-badge-withdrawn' }
         };
@@ -87,13 +87,13 @@ const Formatters = (() => {
         
         const eventTypeMap = {
             'notification': { text: 'Notification', className: '', icon: 'fa-file-alt' },
-            'phase_start': { text: 'Phase Start', className: '', icon: 'fa-play' },
-            'information_request': { text: 'Information Request', className: '', icon: 'fa-question-circle' },
+            'phase_start': { text: 'Phase start', className: '', icon: 'fa-play' },
+            'information_request': { text: 'Information request', className: '', icon: 'fa-question-circle' },
             'decision': { text: 'Decision', className: '', icon: 'fa-check-circle' },
-            'concerns_notice': { text: 'Competition Concerns', className: '', icon: 'fa-exclamation-triangle' },
+            'concerns_notice': { text: 'Competition concerns', className: '', icon: 'fa-exclamation-triangle' },
             'submission': { text: 'Submission', className: '', icon: 'fa-paper-plane' },
             'commitment': { text: 'Commitment', className: '', icon: 'fa-handshake' },
-            'public_benefit': { text: 'Public Benefit', className: '', icon: 'fa-balance-scale' },
+            'public_benefit': { text: 'Public benefit', className: '', icon: 'fa-balance-scale' },
             'assessment': { text: 'Assessment', className: '', icon: 'fa-file-invoice' }
         };
         

@@ -146,7 +146,7 @@ const Dashboard = (() => {
         
         // Prepare data
         const data = {
-            labels: ['Phase 1', 'Phase 2', 'Public Benefit', 'Completed', 'Rejected', 'Withdrawn'],
+            labels: ['Phase 1', 'Phase 2', 'Public benefit', 'Completed', 'Rejected', 'Withdrawn'],
             datasets: [{
                 data: [
                     summary.phase1_reviews,
@@ -159,7 +159,7 @@ const Dashboard = (() => {
                 backgroundColor: [
                     '#007bff', // Phase 1
                     '#fd7e14', // Phase 2
-                    '#6f42c1', // Public Benefit
+                    '#6f42c1', // Public benefit
                     '#28a745', // Completed
                     '#dc3545', // Rejected
                     '#6c757d'  // Withdrawn
@@ -224,9 +224,9 @@ const Dashboard = (() => {
             
             // Prepare data
             const data = {
-                labels: ['Phase 1', 'Phase 2', 'Public Benefit'],
+                labels: ['Phase 1', 'Phase 2', 'Public benefit'],
                 datasets: [{
-                    label: 'Average Days',
+                    label: 'Average days',
                     data: [
                         durationData.average_phase1_days,
                         durationData.average_phase2_days,
@@ -255,7 +255,7 @@ const Dashboard = (() => {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Business Days'
+                            text: 'Business days'
                         }
                     }
                 },
@@ -304,22 +304,22 @@ const Dashboard = (() => {
             
             // Prepare data for export
             const data = [
-                { section: 'Summary Statistics', data: summaryData },
-                { section: 'Recent Activity', data: recentActivity },
-                { section: 'Upcoming Deadlines', data: upcomingDeadlines }
+                { section: 'Summary statistics', data: summaryData },
+                { section: 'Recent activity', data: recentActivity },
+                { section: 'Upcoming deadlines', data: upcomingDeadlines }
             ];
             
             // Create a formatted export
             const exportData = [
-                { Type: 'Dashboard Report', Date: new Date().toISOString() }
+                { Type: 'Dashboard report', Date: new Date().toISOString() }
             ];
             
             // Add summary stats
-            exportData.push({ Type: 'Summary', Category: 'Total Notifications', Value: summaryData.total_notifications });
-            exportData.push({ Type: 'Summary', Category: 'Active Reviews', Value: summaryData.active_reviews });
-            exportData.push({ Type: 'Summary', Category: 'Phase 1 Reviews', Value: summaryData.phase1_reviews });
-            exportData.push({ Type: 'Summary', Category: 'Phase 2 Reviews', Value: summaryData.phase2_reviews });
-            exportData.push({ Type: 'Summary', Category: 'Public Benefit Applications', Value: summaryData.public_benefit_applications });
+            exportData.push({ Type: 'Summary', Category: 'Total notifications', Value: summaryData.total_notifications });
+            exportData.push({ Type: 'Summary', Category: 'Active reviews', Value: summaryData.active_reviews });
+            exportData.push({ Type: 'Summary', Category: 'Phase 1 reviews', Value: summaryData.phase1_reviews });
+            exportData.push({ Type: 'Summary', Category: 'Phase 2 reviews', Value: summaryData.phase2_reviews });
+            exportData.push({ Type: 'Summary', Category: 'Public benefit applications', Value: summaryData.public_benefit_applications });
             
             // Add deadlines
             upcomingDeadlines.forEach(deadline => {

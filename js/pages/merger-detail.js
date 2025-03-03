@@ -59,7 +59,7 @@ const MergerDetail = (() => {
             phaseElement.textContent = 'Phase 2';
         } else if (merger.status === 'public-benefit') {
             phaseElement.className = 'badge badge-public-benefit';
-            phaseElement.textContent = 'Public Benefit';
+            phaseElement.textContent = 'Public benefit';
         } else {
             phaseElement.style.display = 'none';
         }
@@ -68,7 +68,7 @@ const MergerDetail = (() => {
         document.getElementById('merger-acquirer').textContent = merger.acquirer.name;
         document.getElementById('merger-target').textContent = merger.target.name;
         document.getElementById('merger-type').textContent = merger.acquisition_type === 'shares' ? 
-            'Share Acquisition' : merger.acquisition_type === 'assets' ? 'Asset Acquisition' : merger.acquisition_type;
+            'Share Acquisition' : merger.acquisition_type === 'assets' ? 'Asset acquisition' : merger.acquisition_type;
         document.getElementById('merger-notification-date').textContent = DateUtils.formatDate(merger.notification_date);
         
         // Expected completion date
@@ -128,7 +128,7 @@ const MergerDetail = (() => {
                 documentsElement.innerHTML = `
                     <li>
                         <a href="${merger.phase1.determination_link}" target="_blank">
-                            <i class="fas fa-file-pdf"></i> Phase 1 Determination
+                            <i class="fas fa-file-pdf"></i> Phase 1 determination
                         </a>
                     </li>
                 `;
@@ -174,7 +174,7 @@ const MergerDetail = (() => {
                 documentsHTML += `
                     <li>
                         <a href="#" onclick="return false;">
-                            <i class="fas fa-file-pdf"></i> Statement of Competition Concerns
+                            <i class="fas fa-file-pdf"></i> Statement of competition concerns
                         </a>
                     </li>
                 `;
@@ -184,7 +184,7 @@ const MergerDetail = (() => {
                 documentsHTML += `
                     <li>
                         <a href="${merger.phase2.determination_link}" target="_blank">
-                            <i class="fas fa-file-pdf"></i> Phase 2 Determination
+                            <i class="fas fa-file-pdf"></i> Phase 2 determination
                         </a>
                     </li>
                 `;
@@ -237,7 +237,7 @@ const MergerDetail = (() => {
                 documentsHTML += `
                     <li>
                         <a href="#" onclick="return false;">
-                            <i class="fas fa-file-pdf"></i> Public Benefit Assessment
+                            <i class="fas fa-file-pdf"></i> Public benefit assessment
                         </a>
                     </li>
                 `;
@@ -247,7 +247,7 @@ const MergerDetail = (() => {
                 documentsHTML += `
                     <li>
                         <a href="${merger.public_benefit.determination_link}" target="_blank">
-                            <i class="fas fa-file-pdf"></i> Public Benefit Determination
+                            <i class="fas fa-file-pdf"></i> Public benefit determination
                         </a>
                     </li>
                 `;
@@ -335,44 +335,44 @@ const MergerDetail = (() => {
         exportData.push({ Section: 'Basic Information', Field: 'Title', Value: currentMerger.title });
         exportData.push({ Section: 'Basic Information', Field: 'Acquirer', Value: currentMerger.acquirer.name });
         exportData.push({ Section: 'Basic Information', Field: 'Target', Value: currentMerger.target.name });
-        exportData.push({ Section: 'Basic Information', Field: 'Acquisition Type', Value: currentMerger.acquisition_type });
+        exportData.push({ Section: 'Basic Information', Field: 'Acquisition type', Value: currentMerger.acquisition_type });
         exportData.push({ Section: 'Basic Information', Field: 'Status', Value: Formatters.formatStatus(currentMerger.status).text });
-        exportData.push({ Section: 'Basic Information', Field: 'Notification Date', Value: currentMerger.notification_date });
-        exportData.push({ Section: 'Basic Information', Field: 'Effective Notification Date', Value: currentMerger.effective_notification_date });
+        exportData.push({ Section: 'Basic Information', Field: 'Notification date', Value: currentMerger.notification_date });
+        exportData.push({ Section: 'Basic Information', Field: 'Effective notification date', Value: currentMerger.effective_notification_date });
         exportData.push({ Section: 'Basic Information', Field: 'Markets', Value: (currentMerger.markets || []).join(', ') });
         exportData.push({ Section: 'Basic Information', Field: 'Description', Value: currentMerger.description });
         
         // Phase 1
         if (currentMerger.phase1) {
-            exportData.push({ Section: 'Phase 1', Field: 'Start Date', Value: currentMerger.phase1.start_date });
-            exportData.push({ Section: 'Phase 1', Field: 'Expected End Date', Value: currentMerger.phase1.expected_end_date });
-            exportData.push({ Section: 'Phase 1', Field: 'Actual End Date', Value: currentMerger.phase1.actual_end_date });
+            exportData.push({ Section: 'Phase 1', Field: 'Start date', Value: currentMerger.phase1.start_date });
+            exportData.push({ Section: 'Phase 1', Field: 'Expected end date', Value: currentMerger.phase1.expected_end_date });
+            exportData.push({ Section: 'Phase 1', Field: 'Actual end date', Value: currentMerger.phase1.actual_end_date });
             exportData.push({ Section: 'Phase 1', Field: 'Outcome', Value: Formatters.formatOutcome(currentMerger.phase1.outcome).text });
-            exportData.push({ Section: 'Phase 1', Field: 'Determination Details', Value: currentMerger.phase1.determination_details });
+            exportData.push({ Section: 'Phase 1', Field: 'Determination details', Value: currentMerger.phase1.determination_details });
         }
         
         // Phase 2
         if (currentMerger.phase2) {
-            exportData.push({ Section: 'Phase 2', Field: 'Start Date', Value: currentMerger.phase2.start_date });
-            exportData.push({ Section: 'Phase 2', Field: 'Competition Concerns Due', Value: currentMerger.phase2.competition_concerns_due_date });
-            exportData.push({ Section: 'Phase 2', Field: 'Competition Concerns Issued', Value: currentMerger.phase2.competition_concerns_issued_date });
-            exportData.push({ Section: 'Phase 2', Field: 'Submissions Due', Value: currentMerger.phase2.submissions_due_date });
-            exportData.push({ Section: 'Phase 2', Field: 'Expected End Date', Value: currentMerger.phase2.expected_end_date });
-            exportData.push({ Section: 'Phase 2', Field: 'Actual End Date', Value: currentMerger.phase2.actual_end_date });
+            exportData.push({ Section: 'Phase 2', Field: 'Start date', Value: currentMerger.phase2.start_date });
+            exportData.push({ Section: 'Phase 2', Field: 'Competition concerns due', Value: currentMerger.phase2.competition_concerns_due_date });
+            exportData.push({ Section: 'Phase 2', Field: 'Competition concerns issued', Value: currentMerger.phase2.competition_concerns_issued_date });
+            exportData.push({ Section: 'Phase 2', Field: 'Submissions due', Value: currentMerger.phase2.submissions_due_date });
+            exportData.push({ Section: 'Phase 2', Field: 'Expected end date', Value: currentMerger.phase2.expected_end_date });
+            exportData.push({ Section: 'Phase 2', Field: 'Actual end date', Value: currentMerger.phase2.actual_end_date });
             exportData.push({ Section: 'Phase 2', Field: 'Outcome', Value: Formatters.formatOutcome(currentMerger.phase2.outcome).text });
-            exportData.push({ Section: 'Phase 2', Field: 'Competition Concerns Details', Value: currentMerger.phase2.competition_concerns_details });
-            exportData.push({ Section: 'Phase 2', Field: 'Determination Details', Value: currentMerger.phase2.determination_details });
+            exportData.push({ Section: 'Phase 2', Field: 'Competition concerns details', Value: currentMerger.phase2.competition_concerns_details });
+            exportData.push({ Section: 'Phase 2', Field: 'Determination details', Value: currentMerger.phase2.determination_details });
         }
         
         // Public Benefit
         if (currentMerger.public_benefit) {
-            exportData.push({ Section: 'Public Benefit', Field: 'Application Date', Value: currentMerger.public_benefit.application_date });
-            exportData.push({ Section: 'Public Benefit', Field: 'Assessment Issued', Value: currentMerger.public_benefit.assessment_issued_date });
-            exportData.push({ Section: 'Public Benefit', Field: 'Submissions Due', Value: currentMerger.public_benefit.submissions_due_date });
-            exportData.push({ Section: 'Public Benefit', Field: 'Expected Determination', Value: currentMerger.public_benefit.expected_determination_date });
-            exportData.push({ Section: 'Public Benefit', Field: 'Actual Determination', Value: currentMerger.public_benefit.actual_determination_date });
+            exportData.push({ Section: 'Public Benefit', Field: 'Application date', Value: currentMerger.public_benefit.application_date });
+            exportData.push({ Section: 'Public Benefit', Field: 'Assessment issued', Value: currentMerger.public_benefit.assessment_issued_date });
+            exportData.push({ Section: 'Public Benefit', Field: 'Submissions due', Value: currentMerger.public_benefit.submissions_due_date });
+            exportData.push({ Section: 'Public Benefit', Field: 'Expected determination', Value: currentMerger.public_benefit.expected_determination_date });
+            exportData.push({ Section: 'Public Benefit', Field: 'Actual determination', Value: currentMerger.public_benefit.actual_determination_date });
             exportData.push({ Section: 'Public Benefit', Field: 'Outcome', Value: currentMerger.public_benefit.outcome });
-            exportData.push({ Section: 'Public Benefit', Field: 'Determination Details', Value: currentMerger.public_benefit.determination_details });
+            exportData.push({ Section: 'Public Benefit', Field: 'Determination details', Value: currentMerger.public_benefit.determination_details });
         }
         
         // Conditions
@@ -381,15 +381,15 @@ const MergerDetail = (() => {
                 exportData.push({ Section: `Condition ${index + 1}`, Field: 'Description', Value: condition.description });
                 exportData.push({ Section: `Condition ${index + 1}`, Field: 'Status', Value: Formatters.formatConditionStatus(condition.status).text });
                 exportData.push({ Section: `Condition ${index + 1}`, Field: 'Deadline', Value: condition.deadline_date });
-                exportData.push({ Section: `Condition ${index + 1}`, Field: 'Compliance Date', Value: condition.compliance_date });
+                exportData.push({ Section: `Condition ${index + 1}`, Field: 'Compliance date', Value: condition.compliance_date });
             });
         }
         
         // Timeline Events
         if (currentMerger.timeline_events && currentMerger.timeline_events.length > 0) {
             currentMerger.timeline_events.forEach((event, index) => {
-                exportData.push({ Section: 'Timeline', Field: 'Event Date', Value: event.event_date });
-                exportData.push({ Section: 'Timeline', Field: 'Event Type', Value: Formatters.formatEventType(event.event_type).text });
+                exportData.push({ Section: 'Timeline', Field: 'Event date', Value: event.event_date });
+                exportData.push({ Section: 'Timeline', Field: 'Event type', Value: Formatters.formatEventType(event.event_type).text });
                 exportData.push({ Section: 'Timeline', Field: 'Description', Value: event.event_description });
                 exportData.push({ Section: 'Timeline', Field: 'Phase', Value: event.related_phase });
             });

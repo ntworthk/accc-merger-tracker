@@ -8,23 +8,35 @@ const DateUtils = (() => {
     const publicHolidays = {
         // 2025 national holidays
         "2025-01-01": "New Year's Day",
-        "2025-01-26": "Australia Day",
         "2025-01-27": "Australia Day (observed)",
         "2025-04-18": "Good Friday",
-        "2025-04-19": "Easter Saturday",
-        "2025-04-20": "Easter Sunday",
         "2025-04-21": "Easter Monday",
         "2025-04-25": "Anzac Day",
         "2025-06-09": "King's Birthday",
         "2025-12-25": "Christmas Day",
-        "2025-12-26": "Boxing Day"
+        "2025-12-26": "Boxing Day",
+        // 2026 national holidays
+        "2026-01-01": "New Year's Day",
+        "2026-01-26": "Australia Day",
+        "2026-04-03": "Good Friday",
+        "2026-04-06": "Easter Monday",
+        "2026-04-25": "Anzac Day",
+        "2026-06-08": "King's Birthday",
+        "2026-12-25": "Christmas Day",
+        "2026-12-26": "Boxing Day"
+
     };
 
     // ACT-specific holidays (since ACCC is based in Canberra)
     const actHolidays = {
+        // 2025
         "2025-03-10": "Canberra Day",
-        "2025-05-26": "Reconciliation Day",
-        "2025-10-06": "Labour Day"
+        "2025-06-02": "Reconciliation Day",
+        "2025-10-06": "Labour Day",
+        // 2026
+        "2026-03-09": "Canberra Day",
+        "2026-06-01": "Reconciliation Day",
+        "2026-10-05": "Labour Day"
     };
 
     // Check if a date is a business day
