@@ -173,7 +173,7 @@
     top: 50%;
     transform: translateY(-50%);
     color: var(--dark-gray);
-    font-size: 0.85rem);
+    font-size: 0.85rem;
 }
 
 .chart-duration .phase1-bar .chart-bar-fill {
