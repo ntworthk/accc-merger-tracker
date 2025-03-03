@@ -11,7 +11,7 @@ const API = (() => {
     const mockData = {
         mergers: [
             {
-                merger_id: 1,
+                merger_id: "c60a16f0-c432-4ebb-b9e3-62fdf7bc0f5b",
                 title: "TechCorp acquisition of DataSystems Inc.",
                 description: "Acquisition of a data analytics company to expand market reach in the business intelligence sector.",
                 acquisition_type: "shares",
@@ -52,7 +52,7 @@ const API = (() => {
                 ]
             },
             {
-                merger_id: 2,
+                merger_id: "a5d12714-3860-45f3-9a0c-5d9ab2245233",
                 title: "RetailCo merger with OnlineMart",
                 description: "Horizontal merger between retail chain and e-commerce platform to create an omnichannel retail business.",
                 acquisition_type: "shares",
@@ -79,7 +79,7 @@ const API = (() => {
                 ]
             },
             {
-                merger_id: 3,
+                merger_id: "33cb17bf-f943-4f4e-b8cd-03633ad238c2",
                 title: "EnergyAus acquisition of PowerGrid",
                 description: "Vertical acquisition in the energy sector to integrate generation and distribution capabilities.",
                 acquisition_type: "assets",
@@ -123,7 +123,7 @@ const API = (() => {
                 ]
             },
             {
-                merger_id: 4,
+                merger_id: "7706b116-201e-46aa-ab27-4dc36a2eb4c0",
                 title: "MiningCo acquisition of ResourceExtract",
                 description: "Horizontal merger in the mining sector to consolidate operations and achieve economies of scale.",
                 acquisition_type: "shares",
@@ -180,7 +180,7 @@ const API = (() => {
                 ]
             },
             {
-                merger_id: 5,
+                merger_id: "805e5280-2b2c-47e7-99ef-2032f039581b",
                 title: "BankMerge with FinanceNow",
                 description: "Merger of banking institutions to increase market presence and diversify product offerings.",
                 acquisition_type: "shares",
@@ -264,7 +264,7 @@ const API = (() => {
     // Function to simulate API response delay
     const simulateDelay = () => {
         return new Promise(resolve => {
-            const delay = Math.floor(Math.random() * 500) + 300; // 300-800ms delay
+            const delay = 10;
             setTimeout(resolve, delay);
         });
     };
@@ -324,7 +324,7 @@ const API = (() => {
         // Get a single merger by ID
         getMergerById: async (id) => {
             await simulateDelay();
-            const merger = mockData.mergers.find(m => m.merger_id === parseInt(id));
+            const merger = mockData.mergers.find(m => m.merger_id === id);
             if (!merger) {
                 throw new Error('Merger not found');
             }
@@ -334,7 +334,7 @@ const API = (() => {
         // Get timeline events for a merger
         getMergerTimeline: async (id) => {
             await simulateDelay();
-            const merger = mockData.mergers.find(m => m.merger_id === parseInt(id));
+            const merger = mockData.mergers.find(m => m.merger_id === id);
             if (!merger) {
                 throw new Error('Merger not found');
             }

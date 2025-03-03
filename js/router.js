@@ -176,7 +176,7 @@ const Router = (() => {
         navigate,
         getCurrentRoute: () => currentRoute,
         getCurrentParams: () => ({ ...currentParams }),
-        goToMergerDetail: (mergerId) => navigate('merger-detail', { id: mergerId }),
+        goToMergerDetail: (params) => navigate('merger-detail', { id: params.id }),
         goToMergersList: (filters = {}) => navigate('mergers-list', filters),
         goToDashboard: () => navigate('dashboard'),
         goToStatistics: (filters = {}) => navigate('statistics', filters)

@@ -22,7 +22,7 @@ const MergerDetail = (() => {
             document.getElementById('merger-title').textContent = 'Loading...';
             
             // Fetch merger data
-            currentMerger = await API.getMergerById(parseInt(mergerId));
+            currentMerger = await API.getMergerById(mergerId);
             
             // Render merger details
             renderMergerDetails(currentMerger);
