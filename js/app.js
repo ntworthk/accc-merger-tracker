@@ -59,11 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 App.updateLastUpdateDate();
             });
             
-            // Export button
-            document.getElementById('export-button').addEventListener('click', () => {
-                App.exportCurrentView();
-            });
-            
             // Modal close button
             document.getElementById('modal-close').addEventListener('click', () => {
                 App.closeModal();
