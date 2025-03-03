@@ -24,7 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
         setupEventListeners: () => {
             // Toggle sidebar
             document.getElementById('sidebar-toggle').addEventListener('click', () => {
-                document.querySelector('.sidebar').classList.toggle('collapsed');
+                const sidebar = document.querySelector('.sidebar');
+                sidebar.classList.toggle('collapsed');
+                
+                // For mobile devices
+                if (window.innerWidth <= 992) {
+                    sidebar.classList.toggle('show');
+                }
+                
                 document.querySelector('.main-content').classList.toggle('expanded');
             });
             
@@ -62,6 +69,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // Modal close button
             document.getElementById('modal-close').addEventListener('click', () => {
                 App.closeModal();
+            });
+            
+            // Close sidebar when clicking outside on mobile
+            document.querySelector('.main-content').addEventListener('click', (e) => {
+                if (window.innerWidth <= 992) {
+                    const sidebar = document.querySelector('.sidebar');
+                    if (sidebar.classList.contains('show')) {
+                        sidebar.classList.remove('show');
+                    }
+                }
             });
         },
         

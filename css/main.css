@@ -940,14 +940,18 @@ ul, ol {
         height: 100%;
         left: 0;
         transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1050;
     }
     
     .sidebar.show {
         transform: translateX(0);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     }
     
     .main-content {
         margin-left: 0;
+        width: 100%;
     }
     
     .header-right {
