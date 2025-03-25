@@ -1,5 +1,5 @@
 // API base URL - update this to your plumber API
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'https://cardioid.co.nz/mergerapi';
 
 // Global variables
 let allMergers = [];
