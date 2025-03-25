@@ -400,11 +400,17 @@ async function loadStats() {
         
         const stats = await response.json();
         
-        // Update dashboard cards
-        document.getElementById('total-mergers').textContent = stats.total_mergers || 0;
-        document.getElementById('avg-review-days').textContent = stats.avg_review_days ? 
-            stats.avg_review_days.toFixed(1) : '-';
-        document.getElementById('ongoing-mergers').textContent = stats.ongoing_mergers || 0;
+        // Update dashboard cards - handle array values correctly
+        document.getElementById('total-mergers').textContent = 
+            Array.isArray(stats.total_mergers) ? stats.total_mergers[0] : (stats.total_mergers || 0);
+            
+        document.getElementById('avg-review-days').textContent = 
+            Array.isArray(stats.avg_review_days) ? 
+                stats.avg_review_days[0].toFixed(1) : 
+                (stats.avg_review_days ? stats.avg_review_days.toFixed(1) : '-');
+                
+        document.getElementById('ongoing-mergers').textContent = 
+            Array.isArray(stats.ongoing_mergers) ? stats.ongoing_mergers[0] : (stats.ongoing_mergers || 0);
         
         // Render outcome chart
         if (stats.outcomes) {
