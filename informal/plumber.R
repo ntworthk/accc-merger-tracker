@@ -214,13 +214,20 @@ function(id) {
     filter(id == id) |>
     head(1)
   
-  # Combine information
-  merger_info <- basic_info |>
-    select(-last_updated) |>
-    bind_cols(
-      detail_info |> 
-        select(-id) # Avoid duplicate id column
-    )
+  # Combine information - prioritizing detail info for overlapping columns
+  # First, identify columns that exist in both datasets
+  basic_cols <- colnames(basic_info)
+  detail_cols <- colnames(detail_info)
+  overlapping_cols <- intersect(basic_cols, detail_cols)
+  
+  # Remove overlapping columns from basic_info (except id)
+  cols_to_remove <- setdiff(overlapping_cols, "id")
+  basic_info_filtered <- basic_info |>
+    select(-all_of(cols_to_remove))
+  
+  # Now combine the filtered basic info with the full detail info
+  merger_info <- basic_info_filtered |>
+    left_join(detail_info, by = "id")
   
   # Cache for 1 hour (3600 seconds)
   add_to_cache(cache_key, merger_info, 3600)
