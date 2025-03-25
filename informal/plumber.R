@@ -183,6 +183,7 @@ function() {
 }
 
 #* Get detailed information for a specific merger
+#* @serializer unboxedJSON
 #* @param id The ID of the merger
 #* @get /merger/<id>
 function(id) {
