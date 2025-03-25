@@ -6,6 +6,63 @@ library(lubridate)
 library(jsonlite)
 library(RSQLite)
 
+# Create a caching environment
+cache_env <- new.env(parent = emptyenv())
+cache_timestamps <- new.env(parent = emptyenv())
+cache_expires <- new.env(parent = emptyenv())
+
+# Cache helper functions
+# Get data from cache if available and not expired
+get_from_cache <- function(cache_key) {
+  if (exists(cache_key, envir = cache_env)) {
+    # Check if cache has expired
+    expiry_time <- cache_expires[[cache_key]]
+    if (is.null(expiry_time) || Sys.time() < expiry_time) {
+      message("Cache hit for: ", cache_key)
+      return(cache_env[[cache_key]])
+    } else {
+      message("Cache expired for: ", cache_key)
+      # Clean up expired cache entry
+      rm(list = cache_key, envir = cache_env)
+      rm(list = cache_key, envir = cache_expires)
+      rm(list = cache_key, envir = cache_timestamps)
+    }
+  }
+  message("Cache miss for: ", cache_key)
+  return(NULL)
+}
+
+# Add data to cache with expiry time in seconds
+add_to_cache <- function(cache_key, data, expiry_seconds = 3600) {
+  cache_env[[cache_key]] <- data
+  cache_timestamps[[cache_key]] <- Sys.time()
+  if (!is.null(expiry_seconds)) {
+    cache_expires[[cache_key]] <- Sys.time() + expiry_seconds
+  }
+  invisible(TRUE)
+}
+
+# Invalidate specific cache entry
+invalidate_cache <- function(cache_key) {
+  if (exists(cache_key, envir = cache_env)) {
+    rm(list = cache_key, envir = cache_env)
+    rm(list = cache_key, envir = cache_timestamps)
+    rm(list = cache_key, envir = cache_expires)
+    message("Invalidated cache for: ", cache_key)
+    return(TRUE)
+  }
+  return(FALSE)
+}
+
+# Invalidate all cache entries
+invalidate_all_cache <- function() {
+  rm(list = ls(envir = cache_env), envir = cache_env)
+  rm(list = ls(envir = cache_timestamps), envir = cache_timestamps)
+  rm(list = ls(envir = cache_expires), envir = cache_expires)
+  message("All cache entries invalidated")
+  return(TRUE)
+}
+
 # Helper function to read data from db
 read_from_db <- function(con) {
   decisions <- dbReadTable(con, "decisions") |>
@@ -55,9 +112,42 @@ cors <- function(req, res) {
   plumber::forward()
 }
 
+#* Add cache control headers to responses
+#* @filter cache_headers
+cache_headers <- function(req, res) {
+  if (req$PATH_INFO %in% c("/mergers", "/stats")) {
+    # Short cache time for frequently updated data
+    res$setHeader("Cache-Control", "public, max-age=300")  # 5 minutes
+  } else if (grepl("^/merger/", req$PATH_INFO)) {
+    # Longer cache time for individual merger details
+    res$setHeader("Cache-Control", "public, max-age=3600")  # 1 hour
+  } else if (grepl("^/commencements/|^/rolling_averages", req$PATH_INFO)) {
+    # Even longer cache time for timeline data
+    res$setHeader("Cache-Control", "public, max-age=86400")  # 24 hours
+  }
+  plumber::forward()
+}
+
+#* Invalidate all caches
+#* @get /admin/cache/clear
+#* @response 200 Cache cleared successfully
+function() {
+  invalidate_all_cache()
+  return(list(status = "success", message = "All caches cleared successfully"))
+}
+
 #* Get all mergers with basic information
 #* @get /mergers
 function() {
+  # Try to get from cache first
+  cache_key <- "mergers_all"
+  cached_data <- get_from_cache(cache_key)
+  
+  if (!is.null(cached_data)) {
+    return(cached_data)
+  }
+  
+  # If not in cache, get from database
   con <- connect_db()
   on.exit(dbDisconnect(con))
   
@@ -72,7 +162,10 @@ function() {
     ) |>
     arrange(desc(last_updated))
   
-  # Convert to list for JSON serialization
+  # Cache for 5 minutes (300 seconds)
+  add_to_cache(cache_key, mergers, 300)
+  
+  # Return the data
   mergers
 }
 
@@ -80,6 +173,15 @@ function() {
 #* @param id The ID of the merger
 #* @get /merger/<id>
 function(id) {
+  # Try to get from cache first
+  cache_key <- paste0("merger_", id)
+  cached_data <- get_from_cache(cache_key)
+  
+  if (!is.null(cached_data)) {
+    return(cached_data)
+  }
+  
+  # If not in cache, get from database
   con <- connect_db()
   on.exit(dbDisconnect(con))
   
@@ -107,13 +209,24 @@ function(id) {
         select(-id) # Avoid duplicate id column
     )
   
-  # Convert to list for JSON serialization
+  # Cache for 1 hour (3600 seconds)
+  add_to_cache(cache_key, merger_info, 3600)
+  
+  # Return the data
   merger_info
 }
 
 #* Get statistics about mergers
 #* @get /stats
 function() {
+  # Try to get from cache first
+  cache_key <- "merger_stats"
+  cached_data <- get_from_cache(cache_key)
+  
+  if (!is.null(cached_data)) {
+    return(cached_data)
+  }
+  
   con <- connect_db()
   on.exit(dbDisconnect(con))
   
@@ -186,18 +299,32 @@ function() {
   })
   
   # Combine all statistics
-  list(
+  stats_data <- list(
     total_mergers = total_mergers,
     avg_review_days = avg_review_days,
     ongoing_mergers = ongoing_mergers,
     outcomes = outcomes,
     industries = industries
   )
+  
+  # Cache for 10 minutes (600 seconds)
+  add_to_cache(cache_key, stats_data, 600)
+  
+  # Return the data
+  stats_data
 }
 
 #* Get merger commencements by day
 #* @get /commencements/day
 function() {
+  # Try to get from cache first
+  cache_key <- "commencements_day"
+  cached_data <- get_from_cache(cache_key)
+  
+  if (!is.null(cached_data)) {
+    return(cached_data)
+  }
+  
   con <- connect_db()
   on.exit(dbDisconnect(con))
   
@@ -245,12 +372,23 @@ function() {
     left_join(period_counts, by = "period_start") |>
     mutate(count = replace_na(count, 0))
   
+  # Cache for 24 hours (86400 seconds)
+  add_to_cache(cache_key, result, 86400)
+  
   result
 }
 
 #* Get merger commencements by month
 #* @get /commencements/month
 function() {
+  # Try to get from cache first
+  cache_key <- "commencements_month"
+  cached_data <- get_from_cache(cache_key)
+  
+  if (!is.null(cached_data)) {
+    return(cached_data)
+  }
+  
   con <- connect_db()
   on.exit(dbDisconnect(con))
   
@@ -298,12 +436,23 @@ function() {
     left_join(period_counts, by = "period_start") |>
     mutate(count = replace_na(count, 0))
   
+  # Cache for 24 hours (86400 seconds)
+  add_to_cache(cache_key, result, 86400)
+  
   result
 }
 
 #* Get merger commencements by year
 #* @get /commencements/year
 function() {
+  # Try to get from cache first
+  cache_key <- "commencements_year"
+  cached_data <- get_from_cache(cache_key)
+  
+  if (!is.null(cached_data)) {
+    return(cached_data)
+  }
+  
   con <- connect_db()
   on.exit(dbDisconnect(con))
   
@@ -351,12 +500,23 @@ function() {
     left_join(period_counts, by = "period_start") |>
     mutate(count = replace_na(count, 0))
   
+  # Cache for 24 hours (86400 seconds)
+  add_to_cache(cache_key, result, 86400)
+  
   result
 }
 
 #* Calculate rolling sums of merger commencements
 #* @get /rolling_averages
 function() {
+  # Try to get from cache first
+  cache_key <- "rolling_averages"
+  cached_data <- get_from_cache(cache_key)
+  
+  if (!is.null(cached_data)) {
+    return(cached_data)
+  }
+  
   con <- connect_db()
   on.exit(dbDisconnect(con))
   
@@ -408,7 +568,33 @@ function() {
       filter(row_number() %% 7 == 0) # Weekly sampling
   }
   
+  # Cache for 24 hours (86400 seconds)
+  add_to_cache(cache_key, result, 86400)
+  
   result
+}
+
+#* Cache status information
+#* @get /admin/cache/status
+function() {
+  cache_keys <- ls(envir = cache_env)
+  cache_info <- list()
+  
+  for (key in cache_keys) {
+    cache_info[[key]] <- list(
+      created = as.character(cache_timestamps[[key]]),
+      expires = if (!is.null(cache_expires[[key]])) 
+        as.character(cache_expires[[key]]) else "never",
+      expires_in_seconds = if (!is.null(cache_expires[[key]])) 
+        as.numeric(difftime(cache_expires[[key]], Sys.time(), units = "secs")) else NA
+    )
+  }
+  
+  list(
+    cache_entries = length(cache_keys),
+    cache_keys = cache_keys,
+    cache_info = cache_info
+  )
 }
 
 #* @assets ./static
