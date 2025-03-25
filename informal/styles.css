@@ -86,8 +86,30 @@ main {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 1rem;
     margin-bottom: 2rem;
-    min-height: 300px;
-    height: auto;
+    position: relative;
+    height: 400px;  /* Fixed height */
+    width: 100%;
+}
+
+/* Special handling for the industries chart */
+.chart-container:has(#industries-chart) {
+    height: 600px;  /* Taller for industries */
+}
+
+/* Add fallback for browsers that don't support :has */
+#industries-chart-container {
+    height: 600px;
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        height: 350px;
+    }
+    
+    .chart-container:has(#industries-chart),
+    #industries-chart-container {
+        height: 500px;
+    }
 }
 
 .filters {
