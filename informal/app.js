@@ -310,6 +310,14 @@ async function viewMergerDetails(mergerId) {
         }
         
         const merger = await response.json();
+
+        // Make sure we have valid data
+        if (Array.isArray(merger)) {
+            merger = merger[0];
+        }
+        if (!merger || typeof merger !== 'object') {
+            throw new Error('Invalid data format returned from API');
+        }
         
         // Format details
         let formattedCompletedDate = '-';
