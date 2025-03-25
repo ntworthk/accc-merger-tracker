@@ -429,7 +429,7 @@ async function loadStats() {
     }
 }
 
-// Render outcomes chart
+// Update the renderOutcomesChart function
 function renderOutcomesChart(outcomes) {
     const ctx = document.getElementById('outcomes-chart').getContext('2d');
     
@@ -465,18 +465,12 @@ function renderOutcomesChart(outcomes) {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true,
                     ticks: {
                         precision: 0
-                    }
-                },
-                x: {
-                    ticks: {
-                        maxRotation: 45,
-                        minRotation: 45
                     }
                 }
             },
@@ -489,9 +483,12 @@ function renderOutcomesChart(outcomes) {
     });
 }
 
-// Render industries chart
+// Update the renderIndustriesChart function
 function renderIndustriesChart(industries) {
     const ctx = document.getElementById('industries-chart').getContext('2d');
+    
+    // Add the industries-chart class to the container
+    document.getElementById('industries-chart').closest('.chart-container').classList.add('industries-chart');
     
     // If there's an existing chart, destroy it
     if (window.industriesChart) {
@@ -516,7 +513,7 @@ function renderIndustriesChart(industries) {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             indexAxis: 'y',
             scales: {
                 x: {
@@ -527,13 +524,9 @@ function renderIndustriesChart(industries) {
                 },
                 y: {
                     ticks: {
-                        callback: function(value) {
-                            // Truncate long industry names
-                            const label = this.getLabelForValue(value);
-                            if (label.length > 30) {
-                                return label.substring(0, 27) + '...';
-                            }
-                            return label;
+                        autoSkip: false,
+                        font: {
+                            size: 11
                         }
                     }
                 }
@@ -541,14 +534,6 @@ function renderIndustriesChart(industries) {
             plugins: {
                 legend: {
                     display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        title: function(tooltipItems) {
-                            // Show full industry name in tooltip
-                            return tooltipItems[0].label;
-                        }
-                    }
                 }
             }
         }
@@ -579,7 +564,7 @@ async function loadTimelineData() {
     }
 }
 
-// Render timeline chart
+// Update the renderTimelineChart function
 function renderTimelineChart(timelineData, period) {
     const ctx = document.getElementById('timeline-chart').getContext('2d');
     
@@ -615,6 +600,8 @@ function renderTimelineChart(timelineData, period) {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true,
@@ -652,7 +639,7 @@ async function loadRollingAverages() {
     }
 }
 
-// Render rolling averages chart
+// Update the renderRollingChart function
 function renderRollingChart(rollingData) {
     const ctx = document.getElementById('rolling-chart').getContext('2d');
     
@@ -696,6 +683,8 @@ function renderRollingChart(rollingData) {
             ]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true
