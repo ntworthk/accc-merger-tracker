@@ -464,6 +464,8 @@ function renderOutcomesChart(outcomes) {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true,
@@ -507,6 +509,8 @@ function renderIndustriesChart(industries) {
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             indexAxis: 'y',
             scales: {
                 x: {
