@@ -140,13 +140,50 @@ function() {
     filter(!is.na(outcome)) |>
     count(outcome, sort = TRUE, name = "count")
   
-  # Top industries
-  # First, unnest the industry lists
-  industries <- data$decisions |>
-    select(id, industry) |>
-    unnest(industry) |>
-    count(industry, sort = TRUE, name = "count") |>
-    filter(!is.na(industry), industry != "")
+  # Top industries - handle mixed types
+  # First ensure industry is always a list
+  industries <- tryCatch({
+    # Safely process industries by first ensuring all values are proper lists
+    safe_industries <- data$decisions |>
+      # Drop rows with NULL or NA industry
+      filter(!is.null(industry)) |>
+      # Ensure each industry value is a list
+      mutate(
+        industry = purrr::map(industry, function(ind) {
+          if(is.null(ind) || length(ind) == 0) {
+            return(character(0))
+          } else if(is.character(ind)) {
+            return(ind)
+          } else if(is.list(ind)) {
+            # Extract character values from the list
+            ind_chars <- unlist(ind)
+            if(is.character(ind_chars)) {
+              return(ind_chars)
+            } else {
+              return(character(0))
+            }
+          } else {
+            return(character(0))
+          }
+        })
+      )
+    
+    # Now safely extract and count industries
+    result <- safe_industries |>
+      # Explode the list column - each industry value gets a row
+      unnest_longer(industry) |>
+      # Count occurrences
+      count(industry, sort = TRUE, name = "count") |>
+      # Clean up the results
+      filter(!is.na(industry), industry != "")
+    
+    # Return the result (or empty tibble if failed)
+    result
+  }, error = function(e) {
+    # If still failing, return empty results rather than error
+    message("Error processing industries: ", e$message)
+    return(tibble(industry = character(), count = integer()))
+  })
   
   # Combine all statistics
   list(
