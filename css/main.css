@@ -73,6 +73,7 @@
 
 html {
     font-size: 16px;
+    overflow-y: scroll;
 }
 
 body {
@@ -350,6 +351,7 @@ ul, ol {
 
 .modal.show {
     display: flex;
+    padding-right: 17px;
 }
 
 .modal-content {
@@ -988,6 +990,7 @@ ul, ol {
     
     body.sidebar-open {
         overflow: hidden;
+        padding-right: 17px;
     }
 
     .sidebar.show .nav-text,
@@ -1108,3 +1111,15 @@ ul, ol {
   .notification-banner .notification-close:hover {
     color: #343a40;
   }
+
+@supports (scrollbar-width: thin) {
+    body.sidebar-open {
+        padding-right: 12px; /* Firefox scrollbar width */
+    }
+
+    .modal.show {
+        padding-right: 12px;
+      }
+
+}
+  

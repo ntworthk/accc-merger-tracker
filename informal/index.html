@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACCC Mergers Tracker</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <header>
+        <h1>ACCC Mergers Tracker</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#" class="active" data-page="mergers">Mergers</a></li>
+            <li><a href="#" data-page="stats">Statistics</a></li>
+            <li><a href="#" data-page="timeline">Timeline</a></li>
+        </ul>
+    </nav>
+    <main>
+        <div id="mergers-page">
+            <div class="filters">
+                <select id="status-filter">
+                    <option value="">All statuses</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Ongoing">Ongoing</option>
+                </select>
+                <select id="outcome-filter">
+                    <option value="">All outcomes</option>
+                    <option value="Cleared">Cleared</option>
+                    <option value="Opposed">Opposed</option>
+                    <option value="Not opposed">Not opposed</option>
+                </select>
+                <select id="industry-filter">
+                    <option value="">All industries</option>
+                </select>
+                <input type="text" id="search-input" placeholder="Search title or companies...">
+                <button id="apply-filters">Apply filters</button>
+            </div>
+            <div id="mergers-table-container">
+                <div id="loader">
+                    <div class="loader-spinner"></div>
+                    <p>Loading merger data...</p>
+                </div>
+                <table id="mergers-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Outcome</th>
+                            <th>Date</th>
+                            <th>Industry</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mergers-tbody"></tbody>
+                </table>
+                <ul class="pagination" id="pagination"></ul>
+            </div>
+        </div>
+
+        <div id="stats-page" style="display: none;">
+            <div class="dashboard">
+                <div class="card">
+                    <h3>Total mergers</h3>
+                    <h2 id="total-mergers">-</h2>
+                </div>
+                <div class="card">
+                    <h3>Average review days</h3>
+                    <h2 id="avg-review-days">-</h2>
+                </div>
+                <div class="card">
+                    <h3>Ongoing mergers</h3>
+                    <h2 id="ongoing-mergers">-</h2>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h3>Mergers by outcome</h3>
+                <canvas id="outcomes-chart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Top industries</h3>
+                <canvas id="industries-chart"></canvas>
+            </div>
+        </div>
+
+        <div id="timeline-page" style="display: none;">
+            <div class="filters">
+                <select id="period-filter">
+                    <option value="month">Monthly</option>
+                    <option value="year">Yearly</option>
+                </select>
+                <button id="apply-timeline-filters">Apply</button>
+            </div>
+            <div class="chart-container">
+                <h3>Merger commencements over time</h3>
+                <canvas id="timeline-chart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Rolling averages</h3>
+                <canvas id="rolling-chart"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <div id="merger-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title"></h2>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="./app.js"></script>
+</body>
+</html>
