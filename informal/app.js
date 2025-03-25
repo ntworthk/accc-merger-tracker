@@ -438,7 +438,29 @@ function renderOutcomesChart(outcomes) {
         window.outcomesChart.destroy();
     }
     
-    const labels = outcomes.map(item => item.outcome);
+    // Function to wrap text at about 20 characters
+    function wrapLabel(label) {
+        if (!label) return '';
+        // Break at word boundaries if possible
+        const maxChars = 20;
+        if (label.length <= maxChars) return label;
+        
+        // Split into chunks of ~20 chars at word boundaries
+        let result = [];
+        let currentLine = '';
+        label.split(' ').forEach(word => {
+            if (currentLine.length + word.length + 1 <= maxChars) {
+                currentLine += (currentLine.length ? ' ' : '') + word;
+            } else {
+                if (currentLine.length) result.push(currentLine);
+                currentLine = word;
+            }
+        });
+        if (currentLine.length) result.push(currentLine);
+        return result.join('\n');
+    }
+    
+    const labels = outcomes.map(item => wrapLabel(item.outcome));
     const data = outcomes.map(item => item.count);
     const colors = outcomes.map(item => {
         if (item.outcome.toLowerCase().includes('not opposed') || 
@@ -466,7 +488,19 @@ function renderOutcomesChart(outcomes) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    bottom: 20 // Add extra padding at the bottom
+                }
+            },
             scales: {
+                x: {
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 0, // Keep labels horizontal
+                        minRotation: 0  // Keep labels horizontal
+                    }
+                },
                 y: {
                     beginAtZero: true,
                     ticks: {
@@ -477,6 +511,15 @@ function renderOutcomesChart(outcomes) {
             plugins: {
                 legend: {
                     display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        // Show the original, unwrapped text in tooltips
+                        title: function(tooltipItems) {
+                            const index = tooltipItems[0].dataIndex;
+                            return outcomes[index].outcome;
+                        }
+                    }
                 }
             }
         }
@@ -515,6 +558,11 @@ function renderIndustriesChart(industries) {
             responsive: true,
             maintainAspectRatio: false,
             indexAxis: 'y',
+            layout: {
+                padding: {
+                    bottom: 20
+                }
+            },
             scales: {
                 x: {
                     beginAtZero: true,
@@ -602,6 +650,11 @@ function renderTimelineChart(timelineData, period) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    bottom: 20
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true,
@@ -685,6 +738,11 @@ function renderRollingChart(rollingData) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    bottom: 20
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true
