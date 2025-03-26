@@ -172,15 +172,25 @@ function renderMergersTable() {
     
     // Render table rows
     if (currentMergers.length === 0) {
-        mergersTbody.innerHTML = '<tr><td colspan="6">No mergers found matching the criteria.</td></tr>';
+        mergersTbody.innerHTML = '<tr><td colspan="7">No mergers found matching the criteria.</td></tr>';
     } else {
         currentMergers.forEach(merger => {
             const row = document.createElement('tr');
             
-            // Format the date
-            let formattedDate = '-';
-            if (merger.date_completed) {
-                formattedDate = new Date(merger.date_completed).toLocaleDateString('en-AU');
+            // Format the commenced date
+            let formattedCommencedDate = '-';
+            if (merger.commenced_datetime) {
+                formattedCommencedDate = new Date(merger.commenced_datetime).toLocaleDateString('en-AU');
+            }
+            
+            // Format the completed date - blank for ongoing mergers
+            let formattedCompletedDate = '-';
+            const isOngoing = merger.status && merger.status.toLowerCase().includes('under consideration');
+            
+            if (!isOngoing && merger.outcome_datetime) {
+                formattedCompletedDate = new Date(merger.outcome_datetime).toLocaleDateString('en-AU');
+            } else if (isOngoing) {
+                formattedCompletedDate = '';
             }
             
             // Format the industries
@@ -194,15 +204,22 @@ function renderMergersTable() {
             if (merger.status) {
                 if (merger.status.toLowerCase().includes('completed')) {
                     statusClass = 'status-completed';
-                } else if (merger.status.toLowerCase().includes('ongoing') || 
+                } else if (merger.status.toLowerCase().includes('under consideration') || 
+                          merger.status.toLowerCase().includes('ongoing') || 
                           merger.status.toLowerCase().includes('commenced') ||
                           merger.status.toLowerCase().includes('review')) {
                     statusClass = 'status-ongoing';
                 }
             }
             
+            // Display outcome - blank for ongoing mergers
+            let outcome = merger.outcome || '-';
             let outcomeClass = '';
-            if (merger.outcome) {
+            
+            if (isOngoing) {
+                outcome = '';
+                outcomeClass = '';
+            } else if (merger.outcome) {
                 if (merger.outcome.toLowerCase().includes('opposed')) {
                     outcomeClass = 'status-opposed';
                 } else if (merger.outcome.toLowerCase().includes('not opposed') || 
@@ -214,8 +231,9 @@ function renderMergersTable() {
             row.innerHTML = `
                 <td>${merger.title || '-'}</td>
                 <td><span class="status-pill ${statusClass}">${merger.status || '-'}</span></td>
-                <td><span class="status-pill ${outcomeClass}">${merger.outcome || '-'}</span></td>
-                <td>${formattedDate}</td>
+                <td><span class="status-pill ${outcomeClass}">${outcome}</span></td>
+                <td>${formattedCommencedDate}</td>
+                <td>${formattedCompletedDate}</td>
                 <td>${industryText}</td>
                 <td><button class="view-details" data-id="${merger.id}">View details</button></td>
             `;
