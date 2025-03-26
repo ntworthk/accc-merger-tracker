@@ -151,8 +151,24 @@ function applyFilters() {
         const matchesStatus = !statusValue || 
             (merger.status && merger.status.toLowerCase().includes(statusValue));
         
-        const matchesOutcome = !outcomeValue || 
-            (merger.outcome && merger.outcome.toLowerCase().includes(outcomeValue));
+        // More precise outcome matching
+        let matchesOutcome = true;
+        if (outcomeValue) {
+            if (outcomeValue === 'opposed') {
+                // Exact match for "Opposed" that excludes "Not opposed"
+                matchesOutcome = merger.outcome && 
+                    (merger.outcome.toLowerCase() === 'opposed' || 
+                     merger.outcome.toLowerCase().startsWith('opposed '));
+            } else if (outcomeValue === 'not opposed') {
+                // Match for outcomes beginning with "Not opposed"
+                matchesOutcome = merger.outcome && 
+                    merger.outcome.toLowerCase().startsWith('not opposed');
+            } else {
+                // Default case for other outcomes
+                matchesOutcome = merger.outcome && 
+                    merger.outcome.toLowerCase().includes(outcomeValue);
+            }
+        }
         
         const matchesIndustry = !industryValue || 
             (merger.industry && Array.isArray(merger.industry) && 
