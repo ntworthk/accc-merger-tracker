@@ -170,7 +170,7 @@ function() {
   mergers <- data$decisions |>
     left_join(
       data$decisions_detail |>
-        select(id, acquirers, targets),
+        select(id, acquirers, targets, commenced_datetime, outcome_datetime, review_days),
       by = "id"
     ) |>
     arrange(desc(last_updated))
