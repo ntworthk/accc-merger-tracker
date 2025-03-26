@@ -220,10 +220,7 @@ function renderMergersTable() {
             if (merger.status) {
                 if (merger.status.toLowerCase().includes('completed')) {
                     statusClass = 'status-completed';
-                } else if (merger.status.toLowerCase().includes('under consideration') || 
-                          merger.status.toLowerCase().includes('ongoing') || 
-                          merger.status.toLowerCase().includes('commenced') ||
-                          merger.status.toLowerCase().includes('review')) {
+                } else if (merger.status.toLowerCase().includes('under consideration')) {
                     statusClass = 'status-ongoing';
                 }
             }
@@ -236,11 +233,15 @@ function renderMergersTable() {
                 outcome = '';
                 outcomeClass = '';
             } else if (merger.outcome) {
-                if (merger.outcome.toLowerCase().includes('opposed')) {
-                    outcomeClass = 'status-opposed';
-                } else if (merger.outcome.toLowerCase().includes('not opposed') || 
-                          merger.outcome.toLowerCase().includes('cleared')) {
+                if (merger.outcome.toLowerCase().includes('not opposed subject to undertakings')) {
+                    outcomeClass = 'status-partial-cleared';
+                } else if (merger.outcome.toLowerCase().includes('not opposed')) {
                     outcomeClass = 'status-cleared';
+                } else if (merger.outcome.toLowerCase().includes('opposed')) {
+                    outcomeClass = 'status-opposed';
+                } else if (merger.outcome.toLowerCase().includes('withdrawn') ||
+                          merger.outcome.toLowerCase().includes('no decision')) {
+                    outcomeClass = 'status-withdrawn';
                 }
             }
             
