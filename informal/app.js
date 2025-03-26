@@ -330,15 +330,24 @@ async function viewMergerDetails(mergerId) {
             formattedCommencedDate = new Date(merger.commenced_datetime).toLocaleDateString('en-AU');
         }
         
-        // Format acquirers and targets
+        // Format acquirers - handle both string and array formats
         let acquirersHtml = '<p>-</p>';
-        if (merger.acquirers && Array.isArray(merger.acquirers) && merger.acquirers.length > 0) {
-            acquirersHtml = '<ul>' + merger.acquirers.map(a => `<li>${a}</li>`).join('') + '</ul>';
+        if (merger.acquirers) {
+            if (Array.isArray(merger.acquirers) && merger.acquirers.length > 0) {
+                acquirersHtml = '<ul>' + merger.acquirers.map(a => `<li>${a}</li>`).join('') + '</ul>';
+            } else if (typeof merger.acquirers === 'string' && merger.acquirers.trim() !== '') {
+                acquirersHtml = `<p>${merger.acquirers}</p>`;
+            }
         }
         
+        // Format targets - handle both string and array formats
         let targetsHtml = '<p>-</p>';
-        if (merger.targets && Array.isArray(merger.targets) && merger.targets.length > 0) {
-            targetsHtml = '<ul>' + merger.targets.map(t => `<li>${t}</li>`).join('') + '</ul>';
+        if (merger.targets) {
+            if (Array.isArray(merger.targets) && merger.targets.length > 0) {
+                targetsHtml = '<ul>' + merger.targets.map(t => `<li>${t}</li>`).join('') + '</ul>';
+            } else if (typeof merger.targets === 'string' && merger.targets.trim() !== '') {
+                targetsHtml = `<p>${merger.targets}</p>`;
+            }
         }
         
         // Format timeline
