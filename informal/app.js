@@ -7,6 +7,8 @@ let filteredMergers = [];
 let currentPage = 1;
 const itemsPerPage = 10;
 let industryOptions = new Set();
+let currentSortColumn = 'commenced_datetime';
+let currentSortDirection = 'desc';
 
 // DOM elements
 const mergersPage = document.getElementById('mergers-page');
@@ -105,6 +107,17 @@ async function loadMergers() {
         });
         
         populateIndustryFilter();
+        
+        // Set up the sortable headers
+        setupSortableHeaders();
+        
+        // Set up live filtering
+        setupLiveFiltering();
+        
+        // Initial sort by commenced_datetime desc
+        currentSortColumn = 'commenced_datetime';
+        currentSortDirection = 'desc';
+        
         renderMergersTable();
         loadingElement.style.display = 'none';
         mergersTable.style.display = 'table';
@@ -161,6 +174,9 @@ function applyFilters() {
 
 // Render mergers table with pagination
 function renderMergersTable() {
+    // Sort the data before rendering
+    sortMergers();
+    
     // Clear table
     mergersTbody.innerHTML = '';
     
@@ -252,6 +268,154 @@ function renderMergersTable() {
     
     // Render pagination
     renderPagination(totalPages);
+    
+    // Update the sort indicators
+    updateSortIndicators();
+}
+
+// Sort mergers according to current sort settings
+function sortMergers() {
+    filteredMergers.sort((a, b) => {
+        let valueA, valueB;
+        
+        // Get values for sorting according to column
+        if (currentSortColumn === 'title') {
+            valueA = a.title || '';
+            valueB = b.title || '';
+            
+            // For strings, use localeCompare
+            return currentSortDirection === 'asc' 
+                ? valueA.localeCompare(valueB) 
+                : valueB.localeCompare(valueA);
+        } 
+        else if (currentSortColumn === 'status') {
+            valueA = a.status || '';
+            valueB = b.status || '';
+            
+            return currentSortDirection === 'asc' 
+                ? valueA.localeCompare(valueB) 
+                : valueB.localeCompare(valueA);
+        } 
+        else if (currentSortColumn === 'outcome') {
+            valueA = a.outcome || '';
+            valueB = b.outcome || '';
+            
+            return currentSortDirection === 'asc' 
+                ? valueA.localeCompare(valueB) 
+                : valueB.localeCompare(valueA);
+        } 
+        else if (currentSortColumn === 'commenced_datetime') {
+            valueA = a.commenced_datetime ? new Date(a.commenced_datetime).getTime() : 0;
+            valueB = b.commenced_datetime ? new Date(b.commenced_datetime).getTime() : 0;
+            
+            return currentSortDirection === 'asc' ? valueA - valueB : valueB - valueA;
+        } 
+        else if (currentSortColumn === 'outcome_datetime') {
+            valueA = a.outcome_datetime ? new Date(a.outcome_datetime).getTime() : 0;
+            valueB = b.outcome_datetime ? new Date(b.outcome_datetime).getTime() : 0;
+            
+            return currentSortDirection === 'asc' ? valueA - valueB : valueB - valueA;
+        } 
+        else if (currentSortColumn === 'industry') {
+            // For industry, use the first industry if there are multiple
+            valueA = (a.industry && a.industry.length > 0) ? a.industry[0] : '';
+            valueB = (b.industry && b.industry.length > 0) ? b.industry[0] : '';
+            
+            return currentSortDirection === 'asc' 
+                ? valueA.localeCompare(valueB) 
+                : valueB.localeCompare(valueA);
+        }
+        
+        // Default sorting
+        return 0;
+    });
+}
+
+// Function to update sort indicators in the table headers
+function updateSortIndicators() {
+    // Remove all sort indicators first
+    document.querySelectorAll('th .sort-indicator').forEach(el => el.remove());
+    
+    // Map the column index to the data property
+    const columnMapping = {
+        0: 'title',
+        1: 'status',
+        2: 'outcome',
+        3: 'commenced_datetime',
+        4: 'outcome_datetime',
+        5: 'industry'
+    };
+    
+    // Find the header that matches the current sort column
+    document.querySelectorAll('#mergers-table th').forEach((th, index) => {
+        if (index < 6) { // Skip the Actions column
+            const dataColumn = columnMapping[index];
+            
+            if (dataColumn === currentSortColumn) {
+                // Create and append the sort indicator
+                const indicator = document.createElement('span');
+                indicator.className = 'sort-indicator';
+                indicator.innerHTML = currentSortDirection === 'asc' ? ' ▲' : ' ▼';
+                th.appendChild(indicator);
+            }
+        }
+    });
+}
+
+// Function to set up sortable headers
+function setupSortableHeaders() {
+    // Map the index to the data property
+    const columnMapping = {
+        0: 'title',
+        1: 'status',
+        2: 'outcome',
+        3: 'commenced_datetime',
+        4: 'outcome_datetime',
+        5: 'industry'
+    };
+    
+    document.querySelectorAll('#mergers-table th').forEach((th, index) => {
+        if (index < 6) { // Skip the Actions column
+            th.style.cursor = 'pointer';
+            
+            // Add a click event listener
+            th.addEventListener('click', function() {
+                const dataColumn = columnMapping[index];
+                
+                // If clicking the same column, toggle direction
+                if (currentSortColumn === dataColumn) {
+                    currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    // New column, set it as the current sort column and reset direction
+                    currentSortColumn = dataColumn;
+                    currentSortDirection = 'asc';
+                }
+                
+                // Re-render the table with the new sort settings
+                renderMergersTable();
+            });
+        }
+    });
+}
+
+// Function to apply filters immediately
+function setupLiveFiltering() {
+    // Remove the apply filters button as it's no longer needed
+    if (applyFiltersBtn) {
+        applyFiltersBtn.style.display = 'none';
+    }
+    
+    // Set up event listeners for all filter inputs
+    statusFilter.addEventListener('change', applyFilters);
+    outcomeFilter.addEventListener('change', applyFilters);
+    industryFilter.addEventListener('change', applyFilters);
+    
+    // For the search input, use input event with debounce
+    let searchTimeout;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(applyFilters, 300); // 300ms debounce
+    });
 }
 
 // Render pagination controls
@@ -813,3 +977,24 @@ function renderRollingChart(rollingData) {
         }
     });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .sort-indicator {
+            margin-left: 5px;
+            display: inline-block;
+        }
+        
+        #mergers-table th {
+            position: relative;
+            user-select: none;
+        }
+        
+        #mergers-table th:hover {
+            background-color: var(--secondary-color);
+        }
+    `;
+    document.head.appendChild(style);
+});
+
