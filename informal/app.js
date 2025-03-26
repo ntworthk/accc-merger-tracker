@@ -309,7 +309,7 @@ async function viewMergerDetails(mergerId) {
             throw new Error('Failed to fetch merger details');
         }
         
-        const merger = await response.json();
+        let merger = await response.json();
 
         // Make sure we have valid data
         if (Array.isArray(merger)) {
