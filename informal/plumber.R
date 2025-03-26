@@ -184,11 +184,11 @@ function() {
 
 #* Get detailed information for a specific merger
 #* @serializer unboxedJSON
-#* @param id The ID of the merger
-#* @get /merger/<id>
-function(id) {
+#* @param merger_id The ID of the merger
+#* @get /merger/<merger_id>
+function(merger_id) {
   # Try to get from cache first
-  cache_key <- paste0("merger_", id)
+  cache_key <- paste0("merger_", merger_id)
   cached_data <- get_from_cache(cache_key)
   
   if (!is.null(cached_data)) {
@@ -203,7 +203,7 @@ function(id) {
   
   # Get basic info
   basic_info <- data$decisions |>
-    filter(id == id) |>
+    filter(id == merger_id) |>
     head(1)
   
   if (nrow(basic_info) == 0) {
@@ -212,7 +212,7 @@ function(id) {
   
   # Get detailed info
   detail_info <- data$decisions_detail |>
-    filter(id == id) |>
+    filter(id == merger_id) |>
     head(1)
   
   # Combine information - prioritizing detail info for overlapping columns
