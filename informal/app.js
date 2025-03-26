@@ -337,12 +337,11 @@ async function viewMergerDetails(mergerId) {
             throw new Error('Invalid data format returned from API');
         }
         
-        // Format details
-        let formattedCompletedDate = '-';
-        if (merger.outcome_datetime) {
-            formattedCompletedDate = new Date(merger.outcome_datetime).toLocaleDateString('en-AU');
-        }
+        // Check if merger is ongoing
+        const isOngoing = merger.status && 
+            merger.status.toLowerCase().includes('under consideration');
         
+        // Format details
         let formattedCommencedDate = '-';
         if (merger.commenced_datetime) {
             formattedCommencedDate = new Date(merger.commenced_datetime).toLocaleDateString('en-AU');
@@ -383,14 +382,36 @@ async function viewMergerDetails(mergerId) {
         }
         
         modalTitle.textContent = merger.title || 'Merger Details';
-        modalContent.innerHTML = `
-            <div class="merger-details">
+        
+        // Create different HTML for ongoing vs completed mergers
+        let statusHtml = '';
+        if (isOngoing) {
+            // For ongoing mergers, only show status and commenced date
+            statusHtml = `
+                <h3>Status</h3>
+                <p><strong>Status:</strong> ${merger.status || '-'}</p>
+                <p><strong>Date commenced:</strong> ${formattedCommencedDate}</p>
+            `;
+        } else {
+            // For completed mergers, show all fields
+            let formattedCompletedDate = '-';
+            if (merger.outcome_datetime) {
+                formattedCompletedDate = new Date(merger.outcome_datetime).toLocaleDateString('en-AU');
+            }
+            
+            statusHtml = `
                 <h3>Status & Outcome</h3>
                 <p><strong>Status:</strong> ${merger.status || '-'}</p>
                 <p><strong>Outcome:</strong> ${merger.outcome || '-'}</p>
                 <p><strong>Date commenced:</strong> ${formattedCommencedDate}</p>
                 <p><strong>Date completed:</strong> ${formattedCompletedDate}</p>
                 <p><strong>Review duration:</strong> ${merger.review_days || '-'} days</p>
+            `;
+        }
+        
+        modalContent.innerHTML = `
+            <div class="merger-details">
+                ${statusHtml}
                 
                 <h3>Industry</h3>
                 <p>${Array.isArray(merger.industry) ? merger.industry.join(', ') : (merger.industry || '-')}</p>
