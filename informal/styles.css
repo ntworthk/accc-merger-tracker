@@ -128,7 +128,17 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
+    table-layout: fixed;
 }
+
+/* Column width settings for mergers table */
+#mergers-table th:nth-child(1) { width: 29%; } /* Title */
+#mergers-table th:nth-child(2) { width: 9%; }  /* Status */
+#mergers-table th:nth-child(3) { width: 14%; } /* Outcome */
+#mergers-table th:nth-child(4) { width: 10%; } /* Date commenced */
+#mergers-table th:nth-child(5) { width: 10%; } /* Date completed */
+#mergers-table th:nth-child(6) { width: 18%; } /* Industry */
+#mergers-table th:nth-child(7) { width: 10%; }  /* Actions */
 
 table th, table td {
     padding: 0.75rem;
