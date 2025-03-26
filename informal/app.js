@@ -252,7 +252,10 @@ function renderMergersTable() {
                 <td>${formattedCommencedDate}</td>
                 <td>${formattedCompletedDate}</td>
                 <td>${industryText}</td>
-                <td><button class="view-details" data-id="${merger.id}">View details</button></td>
+                <td>
+                    <button class="view-details" data-id="${merger.id}">View details</button>
+                    <a href="https://accc.gov.au/${merger.link}" target="_blank" class="accc-link">ACCC page</a>
+                </td>
             `;
             
             mergersTbody.appendChild(row);
