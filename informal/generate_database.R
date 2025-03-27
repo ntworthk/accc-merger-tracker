@@ -49,8 +49,92 @@ setup_database <- function(db_path = "data/accc_mergers.sqlite") {
       )
     ")
   }
+
+  if (!dbExistsTable(con, "protected_mergers")) {
+    dbExecute(con, "
+      CREATE TABLE protected_mergers (
+        id TEXT PRIMARY KEY,
+        reason TEXT,
+        created_datetime TEXT
+      )
+    ")
+  }
   
   return(con)
+}
+
+# Function to add a merger to the protected list
+protect_merger <- function(merger_id, reason = "Manual update", db_path = "data/accc_mergers.sqlite") {
+  con <- dbConnect(SQLite(), db_path)
+  on.exit(dbDisconnect(con))
+  
+  # Check if merger exists in decisions table
+  merger_exists <- dbGetQuery(con, sprintf("SELECT COUNT(*) AS count FROM decisions WHERE id = '%s'", merger_id))$count > 0
+  
+  if (!merger_exists) {
+    warning(sprintf("Merger ID '%s' not found in database. Protection will still be applied but verify the ID.", merger_id))
+  }
+  
+  # Add or update protected status
+  query <- sprintf("
+    INSERT OR REPLACE INTO protected_mergers (id, reason, created_datetime)
+    VALUES ('%s', '%s', '%s')
+  ", merger_id, gsub("'", "''", reason), as.character(now()))
+  
+  dbExecute(con, query)
+  
+  message(sprintf("Merger ID '%s' is now protected from auto-refresh", merger_id))
+  return(TRUE)
+}
+
+# Function to remove protection from a merger
+unprotect_merger <- function(merger_id, db_path = "data/accc_mergers.sqlite") {
+  con <- dbConnect(SQLite(), db_path)
+  on.exit(dbDisconnect(con))
+  
+  # Ensure table exists
+  setup_protected_mergers_table(con)
+  
+  # Check if merger is protected
+  is_protected <- dbGetQuery(con, sprintf("SELECT COUNT(*) AS count FROM protected_mergers WHERE id = '%s'", merger_id))$count > 0
+  
+  if (!is_protected) {
+    message(sprintf("Merger ID '%s' was not protected", merger_id))
+    return(FALSE)
+  }
+  
+  # Remove protection
+  dbExecute(con, sprintf("DELETE FROM protected_mergers WHERE id = '%s'", merger_id))
+  
+  message(sprintf("Protection removed from merger ID '%s'", merger_id))
+  return(TRUE)
+}
+
+# Function to list all protected mergers
+list_protected_mergers <- function(db_path = "data/accc_mergers.sqlite") {
+  con <- dbConnect(SQLite(), db_path)
+  on.exit(dbDisconnect(con))
+  
+  # Ensure table exists
+  setup_protected_mergers_table(con)
+  
+  # Get all protected mergers
+  protected <- dbReadTable(con, "protected_mergers")
+  
+  if (nrow(protected) == 0) {
+    message("No protected mergers found")
+    return(tibble())
+  }
+  
+  # Join with decisions to get titles
+  result <- dbGetQuery(con, "
+    SELECT p.id, d.title, p.reason, p.created_datetime
+    FROM protected_mergers p
+    LEFT JOIN decisions d ON p.id = d.id
+    ORDER BY p.created_datetime DESC
+  ")
+  
+  return(as_tibble(result))
 }
 
 # Helper functions
@@ -368,6 +452,9 @@ run_accc_scraper <- function(mode = c("new", "update", "update_only", "refresh_a
   con <- setup_database(db_path)
   on.exit(dbDisconnect(con))
   
+  # Get list of protected merger IDs
+  protected_ids <- dbGetQuery(con, "SELECT id FROM protected_mergers")$id
+  
   # Set starting message based on mode
   if (mode == "new") {
     message("Running in 'new' mode - only collecting new mergers...")
@@ -377,6 +464,10 @@ run_accc_scraper <- function(mode = c("new", "update", "update_only", "refresh_a
     message("Running in 'update_only' mode - only checking for updates on ongoing mergers...")
   } else {
     message("Running in 'refresh_all' mode - refreshing data for all mergers...")
+  }
+  
+  if (length(protected_ids) > 0) {
+    message(sprintf("Note: %d protected mergers will be excluded from updates", length(protected_ids)))
   }
   
   # Get current data from database
@@ -409,7 +500,7 @@ run_accc_scraper <- function(mode = c("new", "update", "update_only", "refresh_a
     
     message("Found ", nrow(new_mergers), " new merger(s) and ", 
             nrow(ongoing_mergers), " ongoing merger(s) to check for updates")
-  }  else if (mode == "update_only") {
+  } else if (mode == "update_only") {
     # Process all ongoing mergers only
     ongoing_mergers <- current_decisions |>
       filter(str_detect(status, regex("ongoing|commenced|phase|review|under consideration", ignore_case = TRUE)))
@@ -420,11 +511,23 @@ run_accc_scraper <- function(mode = c("new", "update", "update_only", "refresh_a
       filter(id %in% ongoing_ids)
     
     message("Found ", nrow(ongoing_mergers), " ongoing merger(s) to check for updates")
-  }else {
+  } else {
     # Process all mergers (full refresh)
     to_process <- all_web_decisions
     
     message("Running full refresh on all ", nrow(to_process), " merger(s)")
+  }
+  
+  # Filter out protected mergers
+  if (length(protected_ids) > 0) {
+    original_count <- nrow(to_process)
+    to_process <- to_process |>
+      filter(!(id %in% protected_ids))
+    
+    skipped_count <- original_count - nrow(to_process)
+    if (skipped_count > 0) {
+      message(sprintf("Skipped %d protected merger(s)", skipped_count))
+    }
   }
   
   # If nothing to process, exit early
