@@ -92,9 +92,6 @@ unprotect_merger <- function(merger_id, db_path = "data/accc_mergers.sqlite") {
   con <- dbConnect(SQLite(), db_path)
   on.exit(dbDisconnect(con))
   
-  # Ensure table exists
-  setup_protected_mergers_table(con)
-  
   # Check if merger is protected
   is_protected <- dbGetQuery(con, sprintf("SELECT COUNT(*) AS count FROM protected_mergers WHERE id = '%s'", merger_id))$count > 0
   
@@ -114,9 +111,6 @@ unprotect_merger <- function(merger_id, db_path = "data/accc_mergers.sqlite") {
 list_protected_mergers <- function(db_path = "data/accc_mergers.sqlite") {
   con <- dbConnect(SQLite(), db_path)
   on.exit(dbDisconnect(con))
-  
-  # Ensure table exists
-  setup_protected_mergers_table(con)
   
   # Get all protected mergers
   protected <- dbReadTable(con, "protected_mergers")
