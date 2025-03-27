@@ -103,25 +103,23 @@ main {
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
 }
 
-.filters select, .filters input {
+.filters select {
     padding: 0.5rem;
     border: 1px solid var(--border-color);
     border-radius: 4px;
+    flex: 1;
+    min-width: 120px;
 }
 
-.filters button {
-    padding: 0.5rem 1rem;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
+.filters input[type="text"] {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
-    cursor: pointer;
-}
-
-.filters button:hover {
-    background-color: var(--secondary-color);
+    flex: 3;
+    min-width: 200px;
 }
 
 table {
@@ -301,5 +299,13 @@ tr:nth-child(even) {
 @media (min-width: 992px) {
     .dashboard {
         grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .filters select,
+    .filters input[type="text"] {
+        width: 100%;
+        flex: 1 1 100%;
     }
 }

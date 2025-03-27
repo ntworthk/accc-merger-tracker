@@ -179,7 +179,9 @@ function applyFilters() {
             (merger.acquirers && Array.isArray(merger.acquirers) && 
             merger.acquirers.some(acq => acq.toLowerCase().includes(searchValue))) ||
             (merger.targets && Array.isArray(merger.targets) && 
-            merger.targets.some(target => target.toLowerCase().includes(searchValue)));
+            merger.targets.some(target => target.toLowerCase().includes(searchValue))) ||
+            (merger.industry && Array.isArray(merger.industry) && 
+            merger.industry.some(ind => ind.toLowerCase().includes(searchValue)));
         
         return matchesStatus && matchesOutcome && matchesIndustry && matchesSearch;
     });
@@ -331,10 +333,27 @@ function sortMergers() {
             return currentSortDirection === 'asc' ? valueA - valueB : valueB - valueA;
         } 
         else if (currentSortColumn === 'outcome_datetime') {
-            valueA = a.outcome_datetime ? new Date(a.outcome_datetime).getTime() : 0;
-            valueB = b.outcome_datetime ? new Date(b.outcome_datetime).getTime() : 0;
+            // For outcome_datetime, special handling for null/undefined values
+            const hasOutcomeA = a.outcome_datetime != null && a.outcome_datetime !== '';
+            const hasOutcomeB = b.outcome_datetime != null && b.outcome_datetime !== '';
             
-            return currentSortDirection === 'asc' ? valueA - valueB : valueB - valueA;
+            // If sorting ascending
+            if (currentSortDirection === 'asc') {
+                // If both have outcomes, compare them normally
+                if (hasOutcomeA && hasOutcomeB) {
+                    return new Date(a.outcome_datetime).getTime() - new Date(b.outcome_datetime).getTime();
+                }
+                // Items without outcome dates should appear first when ascending
+                return hasOutcomeA ? 1 : (hasOutcomeB ? -1 : 0);
+            } else {
+                // If sorting descending
+                // If both have outcomes, compare them normally
+                if (hasOutcomeA && hasOutcomeB) {
+                    return new Date(b.outcome_datetime).getTime() - new Date(a.outcome_datetime).getTime();
+                }
+                // Items without outcome dates should appear last when descending
+                return hasOutcomeA ? -1 : (hasOutcomeB ? 1 : 0);
+            }
         } 
         else if (currentSortColumn === 'industry') {
             // For industry, use the first industry if there are multiple
@@ -420,10 +439,6 @@ function setupSortableHeaders() {
 
 // Function to apply filters immediately
 function setupLiveFiltering() {
-    // Remove the apply filters button as it's no longer needed
-    if (applyFiltersBtn) {
-        applyFiltersBtn.style.display = 'none';
-    }
     
     // Set up event listeners for all filter inputs
     statusFilter.addEventListener('change', applyFilters);
