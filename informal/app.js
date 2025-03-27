@@ -19,7 +19,6 @@ const statusFilter = document.getElementById('status-filter');
 const outcomeFilter = document.getElementById('outcome-filter');
 const industryFilter = document.getElementById('industry-filter');
 const searchInput = document.getElementById('search-input');
-const applyFiltersBtn = document.getElementById('apply-filters');
 const periodFilter = document.getElementById('period-filter');
 const applyTimelineFiltersBtn = document.getElementById('apply-timeline-filters');
 const mergersTbody = document.getElementById('mergers-tbody');
@@ -46,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Set up filters
-    applyFiltersBtn.addEventListener('click', applyFilters);
     applyTimelineFiltersBtn.addEventListener('click', loadTimelineData);
     
     // Set up modal
