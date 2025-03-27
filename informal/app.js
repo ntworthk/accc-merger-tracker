@@ -331,26 +331,48 @@ function sortMergers() {
             return currentSortDirection === 'asc' ? valueA - valueB : valueB - valueA;
         } 
         else if (currentSortColumn === 'outcome_datetime') {
-            // For outcome_datetime, special handling for null/undefined values
-            const hasOutcomeA = a.outcome_datetime != null && a.outcome_datetime !== '';
-            const hasOutcomeB = b.outcome_datetime != null && b.outcome_datetime !== '';
+            // Improved outcome_datetime handling with better date parsing
+            
+            // Function to get date value from either outcome_datetime or date_completed
+            const getDateValue = (merger) => {
+                if (merger.outcome_datetime && merger.outcome_datetime !== 'NA') {
+                    return new Date(merger.outcome_datetime).getTime();
+                } else if (merger.date_completed && merger.date_completed !== 'NA') {
+                    // Parse date_completed which may be in a different format
+                    try {
+                        // Australian date format parsing DD Month YYYY
+                        const dateStr = merger.date_completed;
+                        return new Date(dateStr).getTime();
+                    } catch (e) {
+                        return 0;
+                    }
+                }
+                return 0;
+            };
+            
+            const dateValueA = getDateValue(a);
+            const dateValueB = getDateValue(b);
+            
+            // Check if both have valid date values
+            const hasDateA = dateValueA > 0;
+            const hasDateB = dateValueB > 0;
             
             // If sorting ascending
             if (currentSortDirection === 'asc') {
-                // If both have outcomes, compare them normally
-                if (hasOutcomeA && hasOutcomeB) {
-                    return new Date(a.outcome_datetime).getTime() - new Date(b.outcome_datetime).getTime();
+                // If both have dates, compare them normally
+                if (hasDateA && hasDateB) {
+                    return dateValueA - dateValueB;
                 }
-                // Items without outcome dates should appear first when ascending
-                return hasOutcomeA ? 1 : (hasOutcomeB ? -1 : 0);
+                // Items without dates should appear first when ascending
+                return hasDateA ? 1 : (hasDateB ? -1 : 0);
             } else {
                 // If sorting descending
-                // If both have outcomes, compare them normally
-                if (hasOutcomeA && hasOutcomeB) {
-                    return new Date(b.outcome_datetime).getTime() - new Date(a.outcome_datetime).getTime();
+                // If both have dates, compare them normally
+                if (hasDateA && hasDateB) {
+                    return dateValueB - dateValueA;
                 }
-                // Items without outcome dates should appear last when descending
-                return hasOutcomeA ? -1 : (hasOutcomeB ? 1 : 0);
+                // Items without dates should appear last when descending
+                return hasDateA ? -1 : (hasDateB ? 1 : 0);
             }
         } 
         else if (currentSortColumn === 'industry') {
