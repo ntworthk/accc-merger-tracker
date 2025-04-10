@@ -1,6 +1,37 @@
 // API base URL - update this to your plumber API
 const API_BASE_URL = 'https://cardioid.co.nz/mergerapi';
 
+// Utility function for cached fetch operations
+async function cachedFetch(url, forceRefresh = false) {
+    try {
+        const options = {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        };
+        
+        // Set the cache strategy based on whether we want to force refresh
+        if (forceRefresh) {
+            options.cache = 'reload'; // Bypasses cache for fresh data
+        } else {
+            options.cache = 'force-cache'; // Prioritizes cached data
+        }
+        
+        const response = await fetch(url, options);
+        
+        if (!response.ok) {
+            throw new Error(`Request failed with status: ${response.status}`);
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error(`Error fetching ${url}:`, error);
+        throw error; // Re-throw to allow proper error handling by caller
+    }
+}
+
+
 // Global variables
 let allMergers = [];
 let filteredMergers = [];
@@ -88,21 +119,7 @@ async function loadMergers() {
         loadingElement.style.display = 'block';
         mergersTable.style.display = 'none';
         
-        // Create a fetch request with cache control
-        const response = await fetch(`${API_BASE_URL}/mergers`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            },
-            // Use the cache-first strategy
-            cache: 'default' // This uses the browser's standard cache handling
-        });
-        
-        if (!response.ok) {
-            throw new Error('Failed to fetch mergers data');
-        }
-        
-        const data = await response.json();
+        const data = await cachedFetch(`${API_BASE_URL}/mergers`);
         allMergers = data;
         filteredMergers = [...allMergers];
         
@@ -114,13 +131,11 @@ async function loadMergers() {
         });
         
         populateIndustryFilter();
-        
-        // Set up the sortable headers
+
         setupSortableHeaders();
-        
-        // Set up live filtering
+
         setupLiveFiltering();
-        
+
         // Initial sort by commenced_datetime desc
         currentSortColumn = 'commenced_datetime';
         currentSortDirection = 'desc';
@@ -550,19 +565,7 @@ async function viewMergerDetails(mergerId) {
         modalContent.innerHTML = '<div class="loader-spinner"></div>';
         modal.style.display = 'block';
         
-        const response = await fetch(`${API_BASE_URL}/merger/${mergerId}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            },
-            cache: 'default' // Use browser's standard cache handling
-        });
-        
-        if (!response.ok) {
-            throw new Error('Failed to fetch merger details');
-        }
-        
-        let merger = await response.json();
+        let merger = await cachedFetch(`${API_BASE_URL}/merger/${mergerId}`);
 
         // Make sure we have valid data
         if (Array.isArray(merger)) {
@@ -684,19 +687,7 @@ async function loadStats() {
         document.getElementById('avg-review-days').textContent = 'Loading...';
         document.getElementById('ongoing-mergers').textContent = 'Loading...';
         
-        const response = await fetch(`${API_BASE_URL}/stats`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            },
-            cache: 'default' // Use browser's standard cache handling
-        });
-        
-        if (!response.ok) {
-            throw new Error('Failed to fetch statistics');
-        }
-        
-        const stats = await response.json();
+        const stats = await cachedFetch(`${API_BASE_URL}/stats`);
         
         // Update dashboard cards - handle array values correctly
         document.getElementById('total-mergers').textContent = 
@@ -891,19 +882,7 @@ async function loadTimelineData() {
     try {
         const period = periodFilter.value;
         
-        const response = await fetch(`${API_BASE_URL}/commencements/${period}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            },
-            cache: 'default' // Use browser's standard cache handling
-        });
-        
-        if (!response.ok) {
-            throw new Error('Failed to fetch timeline data');
-        }
-        
-        const timelineData = await response.json();
+        const timelineData = await cachedFetch(`${API_BASE_URL}/commencements/${period}`);
         renderTimelineChart(timelineData, period);
         
         // Load rolling averages for daily data
@@ -984,19 +963,7 @@ function renderTimelineChart(timelineData, period) {
 // Load rolling averages data
 async function loadRollingAverages() {
     try {
-        const response = await fetch(`${API_BASE_URL}/rolling_averages`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            },
-            cache: 'default' // Use browser's standard cache handling
-        });
-        
-        if (!response.ok) {
-            throw new Error('Failed to fetch rolling averages');
-        }
-        
-        const rollingData = await response.json();
+        const rollingData = await cachedFetch(`${API_BASE_URL}/rolling_averages`);
         renderRollingChart(rollingData);
         document.getElementById('rolling-chart').style.display = 'block';
     } catch (error) {
