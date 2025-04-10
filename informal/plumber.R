@@ -129,13 +129,13 @@ cors <- function(req, res) {
 #* @filter cache_headers
 cache_headers <- function(req, res) {
   if (req$PATH_INFO %in% c("/mergers", "/stats")) {
-    # Short cache time for frequently updated data
-    res$setHeader("Cache-Control", "public, max-age=300")  # 5 minutes
+    # Cache time for list of mergers
+    res$setHeader("Cache-Control", "public, max-age=3600")  # 1 hour
   } else if (grepl("^/merger/", req$PATH_INFO)) {
-    # Longer cache time for individual merger details
+    # Cache time for individual merger details
     res$setHeader("Cache-Control", "public, max-age=3600")  # 1 hour
   } else if (grepl("^/commencements/|^/rolling_averages", req$PATH_INFO)) {
-    # Even longer cache time for timeline data
+    # Longer cache time for timeline data
     res$setHeader("Cache-Control", "public, max-age=86400")  # 24 hours
   }
   plumber::forward()
@@ -175,8 +175,8 @@ function() {
     ) |>
     arrange(desc(last_updated))
   
-  # Cache for 5 minutes (300 seconds)
-  add_to_cache(cache_key, mergers, 300)
+  # Cache for 1 hour (3600 seconds)
+  add_to_cache(cache_key, mergers, 3600)
   
   # Return the data
   mergers
