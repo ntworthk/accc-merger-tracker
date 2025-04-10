@@ -328,8 +328,8 @@ function() {
     industries = industries
   )
   
-  # Cache for 10 minutes (600 seconds)
-  add_to_cache(cache_key, stats_data, 600)
+  # Cache for 1 hour (3600 seconds)
+  add_to_cache(cache_key, stats_data, 3600)
   
   # Return the data
   stats_data
