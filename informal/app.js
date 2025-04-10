@@ -88,7 +88,16 @@ async function loadMergers() {
         loadingElement.style.display = 'block';
         mergersTable.style.display = 'none';
         
-        const response = await fetch(`${API_BASE_URL}/mergers`);
+        // Create a fetch request with cache control
+        const response = await fetch(`${API_BASE_URL}/mergers`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            },
+            // Use the cache-first strategy
+            cache: 'default' // This uses the browser's standard cache handling
+        });
+        
         if (!response.ok) {
             throw new Error('Failed to fetch mergers data');
         }
@@ -541,7 +550,14 @@ async function viewMergerDetails(mergerId) {
         modalContent.innerHTML = '<div class="loader-spinner"></div>';
         modal.style.display = 'block';
         
-        const response = await fetch(`${API_BASE_URL}/merger/${mergerId}`);
+        const response = await fetch(`${API_BASE_URL}/merger/${mergerId}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            },
+            cache: 'default' // Use browser's standard cache handling
+        });
+        
         if (!response.ok) {
             throw new Error('Failed to fetch merger details');
         }
@@ -668,7 +684,14 @@ async function loadStats() {
         document.getElementById('avg-review-days').textContent = 'Loading...';
         document.getElementById('ongoing-mergers').textContent = 'Loading...';
         
-        const response = await fetch(`${API_BASE_URL}/stats`);
+        const response = await fetch(`${API_BASE_URL}/stats`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            },
+            cache: 'default' // Use browser's standard cache handling
+        });
+        
         if (!response.ok) {
             throw new Error('Failed to fetch statistics');
         }
@@ -868,7 +891,14 @@ async function loadTimelineData() {
     try {
         const period = periodFilter.value;
         
-        const response = await fetch(`${API_BASE_URL}/commencements/${period}`);
+        const response = await fetch(`${API_BASE_URL}/commencements/${period}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            },
+            cache: 'default' // Use browser's standard cache handling
+        });
+        
         if (!response.ok) {
             throw new Error('Failed to fetch timeline data');
         }
@@ -954,7 +984,14 @@ function renderTimelineChart(timelineData, period) {
 // Load rolling averages data
 async function loadRollingAverages() {
     try {
-        const response = await fetch(`${API_BASE_URL}/rolling_averages`);
+        const response = await fetch(`${API_BASE_URL}/rolling_averages`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            },
+            cache: 'default' // Use browser's standard cache handling
+        });
+        
         if (!response.ok) {
             throw new Error('Failed to fetch rolling averages');
         }
