@@ -40,9 +40,14 @@ const itemsPerPage = 10;
 let industryOptions = new Set();
 let currentSortColumn = 'commenced_datetime';
 let currentSortDirection = 'desc';
+let allUpcomingEvents = [];
+let filteredUpcomingEvents = [];
+let upcomingCurrentPage = 1;
+const upcomingItemsPerPage = 10;
 
 // DOM elements
 const mergersPage = document.getElementById('mergers-page');
+const upcomingPage = document.getElementById('upcoming-page');
 const statsPage = document.getElementById('stats-page');
 const timelinePage = document.getElementById('timeline-page');
 const navLinks = document.querySelectorAll('nav a');
@@ -96,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Show the selected page
 function showPage(page) {
     mergersPage.style.display = 'none';
+    upcomingPage.style.display = 'none';
     statsPage.style.display = 'none';
     timelinePage.style.display = 'none';
 
@@ -104,6 +110,9 @@ function showPage(page) {
         if (allMergers.length === 0) {
             loadMergers();
         }
+    } else if (page === 'upcoming') {
+        upcomingPage.style.display = 'block';
+        loadUpcomingEvents();
     } else if (page === 'stats') {
         statsPage.style.display = 'block';
         loadStats();
@@ -678,6 +687,138 @@ async function viewMergerDetails(mergerId) {
         console.error('Error loading merger details:', error);
         modalContent.innerHTML = `<p>Error loading details: ${error.message}</p>`;
     }
+}
+
+// Load upcoming events data
+async function loadUpcomingEvents() {
+    try {
+        document.getElementById('upcoming-loader').style.display = 'block';
+        document.getElementById('upcoming-table').style.display = 'none';
+        
+        const data = await cachedFetch(`${API_BASE_URL}/upcoming_events`);
+        allUpcomingEvents = data;
+        filteredUpcomingEvents = [...allUpcomingEvents];
+        
+        renderUpcomingEventsTable();
+        document.getElementById('upcoming-loader').style.display = 'none';
+        document.getElementById('upcoming-table').style.display = 'table';
+    } catch (error) {
+        console.error('Error loading upcoming events:', error);
+        document.getElementById('upcoming-loader').innerHTML = `<p>Error loading data: ${error.message}</p>`;
+    }
+}
+
+function renderUpcomingEventsTable() {
+    const tbody = document.getElementById('upcoming-tbody');
+    tbody.innerHTML = '';
+    
+    // Calculate pagination
+    const totalPages = Math.ceil(filteredUpcomingEvents.length / upcomingItemsPerPage);
+    const startIndex = (upcomingCurrentPage - 1) * upcomingItemsPerPage;
+    const endIndex = Math.min(startIndex + upcomingItemsPerPage, filteredUpcomingEvents.length);
+    const currentEvents = filteredUpcomingEvents.slice(startIndex, endIndex);
+    
+    // Render table rows
+    if (currentEvents.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4">No upcoming events found.</td></tr>';
+    } else {
+        currentEvents.forEach(event => {
+            const row = document.createElement('tr');
+            
+            // Format the event date
+            let formattedEventDate = '-';
+            if (event.event_date) {
+                formattedEventDate = new Date(event.event_date).toLocaleDateString('en-AU');
+            }
+            
+            // Get the event description (check multiple possible column names)
+            let eventDescription = event.Event || event.Description || '-';
+            
+            row.innerHTML = `
+                <td>${event.merger_title || '-'}</td>
+                <td>${formattedEventDate}</td>
+                <td>${eventDescription}</td>
+                <td>
+                    <button class="view-details" data-id="${event.merger_id}">View details</button>
+                    <a href="https://accc.gov.au/${event.merger_link}" target="_blank" class="accc-link">ACCC page</a>
+                </td>
+            `;
+            
+            tbody.appendChild(row);
+        });
+        
+        // Set up view details buttons
+        document.querySelectorAll('#upcoming-tbody .view-details').forEach(button => {
+            button.addEventListener('click', function() {
+                const mergerId = this.getAttribute('data-id');
+                viewMergerDetails(mergerId);
+            });
+        });
+    }
+    
+    // Render pagination
+    renderUpcomingPagination(totalPages);
+}
+
+function renderUpcomingPagination(totalPages) {
+    const paginationElement = document.getElementById('upcoming-pagination');
+    paginationElement.innerHTML = '';
+    
+    if (totalPages <= 1) {
+        return;
+    }
+    
+    // Previous button
+    const prevLi = document.createElement('li');
+    const prevButton = document.createElement('button');
+    prevButton.textContent = '←';
+    prevButton.disabled = upcomingCurrentPage === 1;
+    prevButton.addEventListener('click', () => {
+        if (upcomingCurrentPage > 1) {
+            upcomingCurrentPage--;
+            renderUpcomingEventsTable();
+        }
+    });
+    prevLi.appendChild(prevButton);
+    paginationElement.appendChild(prevLi);
+    
+    // Page buttons
+    const maxButtons = 5;
+    let startPage = Math.max(1, upcomingCurrentPage - Math.floor(maxButtons / 2));
+    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+    
+    if (endPage - startPage + 1 < maxButtons) {
+        startPage = Math.max(1, endPage - maxButtons + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+        const pageLi = document.createElement('li');
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        if (i === upcomingCurrentPage) {
+            pageButton.classList.add('active');
+        }
+        pageButton.addEventListener('click', () => {
+            upcomingCurrentPage = i;
+            renderUpcomingEventsTable();
+        });
+        pageLi.appendChild(pageButton);
+        paginationElement.appendChild(pageLi);
+    }
+    
+    // Next button
+    const nextLi = document.createElement('li');
+    const nextButton = document.createElement('button');
+    nextButton.textContent = '→';
+    nextButton.disabled = upcomingCurrentPage === totalPages;
+    nextButton.addEventListener('click', () => {
+        if (upcomingCurrentPage < totalPages) {
+            upcomingCurrentPage++;
+            renderUpcomingEventsTable();
+        }
+    });
+    nextLi.appendChild(nextButton);
+    paginationElement.appendChild(nextLi);
 }
 
 // Load statistics data

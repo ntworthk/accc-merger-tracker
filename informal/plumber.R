@@ -618,6 +618,89 @@ function() {
   )
 }
 
+#* Get upcoming events from all mergers
+#* @serializer unboxedJSON
+#* @get /upcoming_events
+function() {
+  # Try to get from cache first
+  cache_key <- "upcoming_events"
+  cached_data <- get_from_cache(cache_key)
+  
+  if (!is.null(cached_data)) {
+    return(cached_data)
+  }
+  
+  # Get database connection
+  con <- connect_db()
+  on.exit(dbDisconnect(con))
+  
+  # Read data from database
+  data <- read_from_db(con)
+  
+  # Get current date
+  current_date <- Sys.Date()
+  
+  # Process each merger and extract upcoming events
+  result <- data$decisions %>%
+    # Join with details
+    left_join(data$decisions_detail, by = "id") %>%
+    # Filter out mergers without timeline
+    filter(!is.null(timeline), lengths(timeline) > 0) %>%
+    # Process each merger
+    mutate(upcoming_events = pmap(list(id, title, link, timeline), function(id, title, link, tl) {
+      # Skip if timeline is not a dataframe or is empty
+      if (!is.data.frame(tl[[1]]) || nrow(tl[[1]]) == 0 || !"time" %in% names(tl[[1]])) {
+        return(NULL)
+      }
+      
+      # Extract events with dates in the future
+      future_events <- tryCatch({
+        tl[[1]] %>%
+          mutate(event_date = as_date(time)) %>%
+          filter(!is.na(event_date) & event_date >= current_date) %>%
+          # Add merger details
+          mutate(
+            merger_id = id,
+            merger_title = title,
+            merger_link = link
+          )
+      }, error = function(e) {
+        NULL
+      })
+      
+      if (is.null(future_events) || nrow(future_events) == 0) {
+        return(NULL)
+      }
+      
+      future_events
+    })) %>%
+    # Filter out mergers with no upcoming events
+    filter(!map_lgl(upcoming_events, is.null)) %>%
+    # Unnest the upcoming events
+    select(upcoming_events) %>%
+    unnest(upcoming_events) %>%
+    # Sort by event date
+    arrange(event_date)
+  
+  # If no events, return empty tibble
+  if (nrow(result) == 0) {
+    result <- tibble(
+      merger_id = character(),
+      merger_title = character(),
+      merger_link = character(),
+      event_date = as.Date(character()),
+      Event = character(),
+      Description = character()
+    )
+  }
+  
+  # Cache for 1 hour (3600 seconds)
+  add_to_cache(cache_key, result, 3600)
+  
+  # Return the result
+  result
+}
+
 #* @assets ./static
 list()
 

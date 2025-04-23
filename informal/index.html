@@ -13,6 +13,7 @@
     <nav>
         <ul>
             <li><a href="#" class="active" data-page="mergers">Mergers</a></li>
+            <li><a href="#" data-page="upcoming">Upcoming</a></li>
             <li><a href="#" data-page="stats">Statistics</a></li>
             <li><a href="#" data-page="timeline">Timeline</a></li>
         </ul>
@@ -59,7 +60,29 @@
                 <ul class="pagination" id="pagination"></ul>
             </div>
         </div>
-
+        <div id="upcoming-page" style="display: none;">
+            <div class="upcoming-container">
+                <h2>Upcoming events</h2>
+                <div id="upcoming-table-container">
+                    <div id="upcoming-loader">
+                        <div class="loader-spinner"></div>
+                        <p>Loading upcoming events...</p>
+                    </div>
+                    <table id="upcoming-table" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>Merger</th>
+                                <th>Event date</th>
+                                <th>Event description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="upcoming-tbody"></tbody>
+                    </table>
+                    <ul class="pagination" id="upcoming-pagination"></ul>
+                </div>
+            </div>
+        </div>
         <div id="stats-page" style="display: none;">
             <div class="dashboard">
                 <div class="card">
