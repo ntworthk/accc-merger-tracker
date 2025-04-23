@@ -646,39 +646,17 @@ function() {
     left_join(data$decisions_detail, by = "id") %>%
     # Filter out mergers without timeline
     filter(!is.null(timeline), lengths(timeline) > 0) %>%
-    # Process each merger
-    mutate(upcoming_events = pmap(list(id, title, link, timeline), function(id, title, link, tl) {
-      # Skip if timeline is not a dataframe or is empty
-      if (!is.data.frame(tl[[1]]) || nrow(tl[[1]]) == 0 || !"time" %in% names(tl[[1]])) {
-        return(NULL)
-      }
-      
-      # Extract events with dates in the future
-      future_events <- tryCatch({
-        tl[[1]] %>%
-          mutate(event_date = as_date(time)) %>%
-          filter(!is.na(event_date) & event_date >= current_date) %>%
-          # Add merger details
-          mutate(
-            merger_id = id,
-            merger_title = title,
-            merger_link = link
-          )
-      }, error = function(e) {
-        NULL
-      })
-      
-      if (is.null(future_events) || nrow(future_events) == 0) {
-        return(NULL)
-      }
-      
-      future_events
-    })) %>%
-    # Filter out mergers with no upcoming events
-    filter(!map_lgl(upcoming_events, is.null)) %>%
-    # Unnest the upcoming events
-    select(upcoming_events) %>%
-    unnest(upcoming_events) %>%
+    unnest(timeline) %>%
+    mutate(time = ymd_hms(time)) %>%
+    filter(time > current_date) %>%
+    select(
+      merger_id = id,
+      merger_title = title,
+      merger_link = link,
+      event_date = time,
+      Event = Event,
+      Description = description
+    ) |>
     # Sort by event date
     arrange(event_date)
   
