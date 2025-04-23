@@ -654,8 +654,7 @@ function() {
       merger_title = title,
       merger_link = link,
       event_date = time,
-      Event = Event,
-      Description = description
+      Event = Event
     ) |>
     # Sort by event date
     arrange(event_date)
@@ -667,8 +666,7 @@ function() {
       merger_title = character(),
       merger_link = character(),
       event_date = as.Date(character()),
-      Event = character(),
-      Description = character()
+      Event = character()
     )
   }
   
