@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACCC Merger Notification Survey</title>
+    <!-- Chart.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #008698;
+            --secondary-color: #f5f5f5;
+            --accent-color: #ff6b35;
+            --text-color: #333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .survey-container {
+            background-color: var(--secondary-color);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        input[type="number"] {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 150px;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            height: 41px; /* Match input height */
+        }
+        
+        button:hover {
+            background-color: #004456;
+        }
+        
+        .results-container {
+            margin-top: 30px;
+            display: none; /* Initially hidden */
+            opacity: 0; /* For fade-in effect */
+        }
+        
+        .graph-title {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .chart-container {
+            height: 400px;
+            position: relative;
+        }
+        
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            display: none;
+            text-align: center;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        .footer {
+            font-size: 0.8rem;
+            color: #888;
+            text-align: center;
+            margin-top: 30px;
+            padding: 10px;
+        }
+        
+        .footer a {
+            color: #005a70;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="survey-container">
+        <h1>ACCC merger notification survey</h1>
+        
+        <div class="question">
+            How many mergers will be notified to the ACCC under the new regime in 2026?
+        </div>
+        
+        <form id="surveyForm">
+            <div class="input-group">
+                <input type="number" id="mergerCount" min="0" required placeholder="Enter a number">
+                <button type="submit" id="submitButton">Submit</button>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                Please enter a valid number (integer only).
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                Thank you for your response! View the results below.
+            </div>
+        </form>
+    </div>
+    
+    <div class="results-container" id="resultsContainer">
+        <h2 class="graph-title">Survey responses so far</h2>
+        
+        <div class="chart-container">
+            <canvas id="resultsChart"></canvas>
+        </div>
+    </div>
+    <div class="footer">
+        This website created by <a href="https://www.linkedin.com/in/nick-twort/" target="_blank">Nick Twort</a> from <a href="https://www.houstonkemp.com/" target="_blank">HoustonKemp</a>. The only data stored by this website is your estimate - no personal data whatsoever is collected.
+    </div>    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('surveyForm');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const resultsContainer = document.getElementById('resultsContainer');
+            let resultsChart = null;
+            
+            // Fallback data in case the API is unavailable
+            const mockResponseData = {
+                status: "success",
+                votes: [
+                    { bucket: "0-100", n: 2 },
+                    { bucket: "100-250", n: 10 },
+                    { bucket: "250-500", n: 25 },
+                    { bucket: "500-1000", n: 86 },
+                    { bucket: "1000-2000", n: 45 },
+                    { bucket: "2000+", n: 12 }
+                ],
+                summary_results: [
+                    { mean: 567.8, median: 512 }
+                ]
+            };
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const mergerCountInput = document.getElementById('mergerCount');
+                const mergerCount = parseInt(mergerCountInput.value);
+                
+                // Validate input
+                if (isNaN(mergerCount) || mergerCount < 0 || !Number.isInteger(mergerCount)) {
+                    errorMessage.style.display = 'block';
+                    successMessage.style.display = 'none';
+                    return;
+                }
+                
+                errorMessage.style.display = 'none';
+                
+                // Prepare data for the POST request
+                const requestData = {
+                    vote: mergerCount,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Encode the JSON as base64
+                const jsonString = JSON.stringify(requestData);
+                const base64Data = btoa(jsonString);
+                
+                // Set up the API URL with the encoded data
+                const submitUrl = `https://cardioid.co.nz/api/submit_vote?vote_base64=${encodeURIComponent(base64Data)}`;
+                
+                // Disable button during submission
+                document.getElementById('submitButton').disabled = true;
+                document.getElementById('submitButton').textContent = 'Submitting...';
+                
+                // Make the POST request
+                fetch(submitUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Vote submitted successfully:', data);
+                    
+                    // Now fetch the current vote results
+                    return fetch('https://cardioid.co.nz/api/get_votes');
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to get votes');
+                    }
+                    return response.json();
+                })
+                .then(voteData => {
+                    // Re-enable button
+                    document.getElementById('submitButton').disabled = false;
+                    document.getElementById('submitButton').textContent = 'Submit';
+                    
+                    // Show success message
+                    successMessage.style.display = 'block';
+                    
+                    // Display results with the actual API data
+                    displayResults(voteData);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    
+                    // Re-enable button
+                    document.getElementById('submitButton').disabled = false;
+                    document.getElementById('submitButton').textContent = 'Submit';
+                    
+                    // Show error in the error message area
+                    errorMessage.textContent = 'Failed to submit response. Please try again.';
+                    errorMessage.style.display = 'block';
+                });
+            });
+            
+            function displayResults(data) {
+                // Check if we're using the new API format
+                let labels, counts, meanValue;
+                
+                if (data.votes) {
+                    // Using the real API response format
+                    labels = data.votes.map(item => item.bucket);
+                    counts = data.votes.map(item => item.n);
+                    
+                    // Extract mean value from summary_results if available
+                    if (data.summary_results && data.summary_results.length > 0 && data.summary_results[0].mean !== undefined) {
+                        meanValue = Math.round(data.summary_results[0].mean);
+                    }
+                } else if (data.ranges) {
+                    // Using the old mock data format (for testing)
+                    labels = data.ranges.map(item => item.range);
+                    counts = data.ranges.map(item => item.count);
+                    // Set a default mean for testing
+                    meanValue = 567;
+                } else {
+                    console.error('Unknown data format:', data);
+                    return;
+                }
+                
+                // Update the graph title with the mean if available
+                const graphTitle = document.querySelector('.graph-title');
+                if (meanValue !== undefined) {
+                    graphTitle.textContent = `Average response so far: ${meanValue} mergers`;
+                } else {
+                    graphTitle.textContent = 'Survey responses so far';
+                }
+                
+                // If chart exists, destroy it
+                if (resultsChart) {
+                    resultsChart.destroy();
+                }
+                
+                // Show the results container first
+                resultsContainer.style.display = 'block';
+                resultsContainer.style.animation = 'fadeInUp 0.8s forwards';
+                
+                // Create chart with all zeros initially
+                const ctx = document.getElementById('resultsChart').getContext('2d');
+                const zeroData = counts.map(() => 0);
+                
+                resultsChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Number of responses',
+                            data: zeroData,
+                            backgroundColor: '#008698',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 0 // No animation for initial render
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of responses'
+                                },
+                                // Only show integer ticks
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: function(value) {
+                                        return Number.isInteger(value) ? value : '';
+                                    }
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Range of merger notifications'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.parsed.y} responses`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                // Wait a moment, then animate to actual values
+                setTimeout(function() {
+                    // Turn on animation for the update
+                    resultsChart.options.animation = {
+                        duration: 1000
+                    };
+                    
+                    // Update data to trigger animation
+                    resultsChart.data.datasets[0].data = counts;
+                    resultsChart.update();
+                }, 200);
+            }
+        });
+    </script>
+</body>
+</html>
